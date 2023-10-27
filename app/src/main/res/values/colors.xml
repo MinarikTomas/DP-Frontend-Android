@@ -7,4 +7,5 @@
     <color name="gray_hint">#A1A1A1</color>
     <color name="gray">#929292</color>
     <color name="white_bg">#FFFEFAFD</color>
+    <color name="gray_bg">#E5E5E5</color>
 </resources>
