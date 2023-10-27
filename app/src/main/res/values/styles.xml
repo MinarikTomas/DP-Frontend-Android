@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="input_style">
+        <item name="hintTextColor">@color/blue</item>
+        <item name="android:textColorHint">@color/gray_hint</item>
+        <item name="boxStrokeWidth">2dp</item>
+        <item name="boxStrokeColor">@color/text_input_layout_stroke_color</item>
+    </style>
+</resources>
