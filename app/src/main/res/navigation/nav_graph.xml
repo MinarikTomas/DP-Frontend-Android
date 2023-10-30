@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@+id/fragment_home">
+
+    <fragment
+        android:id="@+id/fragment_home"
+        android:name="sk.stuba.fei.uim.dp.attendance.fragments.HomeFragment">
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/fragment_login"
+        android:name="sk.stuba.fei.uim.dp.attendance.fragments.LoginFragment">
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/fragment_signup"
+        android:name="sk.stuba.fei.uim.dp.attendance.fragments.SignupFragment">
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/fragment_add_card"
+        android:name="sk.stuba.fei.uim.dp.attendance.fragments.AddCardFragment">
+        
+    </fragment>
+
+
+</navigation>
