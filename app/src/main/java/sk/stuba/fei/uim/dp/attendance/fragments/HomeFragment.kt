@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import sk.stuba.fei.uim.dp.attendance.R
 import sk.stuba.fei.uim.dp.attendance.adapters.ActivitiesAdapter
 import sk.stuba.fei.uim.dp.attendance.adapters.MyItem
+import sk.stuba.fei.uim.dp.attendance.utils.SpacesItemDecoration
 
 class HomeFragment : Fragment(R.layout.fragment_home) {
 
@@ -44,6 +45,9 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         recyclerView.layoutManager = LinearLayoutManager(context)
         val activitiesAdapter = ActivitiesAdapter()
         recyclerView.adapter = activitiesAdapter
+        recyclerView.addItemDecoration(
+            SpacesItemDecoration(20)
+        )
         activitiesAdapter.updateItems(dataList)
 
     }
