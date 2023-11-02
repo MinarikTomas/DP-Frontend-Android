@@ -30,10 +30,41 @@
         android:paddingStart="20dp"
         android:paddingEnd="20dp"
         app:layout_constraintBottom_toTopOf="@+id/bottom_bar"
+        app:layout_constraintTop_toBottomOf="@+id/toggle"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <RadioGroup
+        android:id="@+id/toggle"
+        android:layout_width="wrap_content"
+        android:layout_height="35dp"
+        android:background="@drawable/switch_bg"
+        android:orientation="horizontal"
+        android:padding="3dp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView6" />
+        app:layout_constraintTop_toBottomOf="@+id/textView6">
+
+        <RadioButton
+            android:id="@+id/upcoming"
+            style="@style/switch_style"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:checked="true"
+            android:text="Upcoming" />
+
+        <RadioButton
+            android:id="@+id/past"
+            style="@style/switch_style"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="Past" />
+
+    </RadioGroup>
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
