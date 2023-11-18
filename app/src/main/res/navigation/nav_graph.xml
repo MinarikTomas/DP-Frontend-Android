@@ -2,29 +2,41 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/nav_graph"
-    app:startDestination="@+id/fragment_home">
+    app:startDestination="@+id/fragment_login">
 
     <fragment
         android:id="@+id/fragment_home"
-        android:name="sk.stuba.fei.uim.dp.attendance.fragments.HomeFragment">
+        android:name="sk.stuba.fei.uim.dp.attendance.fragments.HomeFragment"
+        android:label="HomeFragment">
 
     </fragment>
 
     <fragment
         android:id="@+id/fragment_login"
-        android:name="sk.stuba.fei.uim.dp.attendance.fragments.LoginFragment">
+        android:name="sk.stuba.fei.uim.dp.attendance.fragments.LoginFragment"
+        android:label="LoginFragment">
+
+        <action
+            android:id="@+id/action_login_signup"
+            app:destination="@+id/fragment_signup"/>
 
     </fragment>
 
     <fragment
         android:id="@+id/fragment_signup"
-        android:name="sk.stuba.fei.uim.dp.attendance.fragments.SignupFragment">
+        android:name="sk.stuba.fei.uim.dp.attendance.fragments.SignupFragment"
+        android:label="SignupFragment">
+
+        <action
+            android:id="@+id/action_signup_login"
+            app:destination="@+id/fragment_login"/>
 
     </fragment>
 
     <fragment
         android:id="@+id/fragment_add_card"
-        android:name="sk.stuba.fei.uim.dp.attendance.fragments.AddCardFragment">
+        android:name="sk.stuba.fei.uim.dp.attendance.fragments.AddCardFragment"
+        android:label="AddCardFragment">
         
     </fragment>
 
