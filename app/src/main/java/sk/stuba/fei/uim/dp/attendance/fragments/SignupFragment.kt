@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import sk.stuba.fei.uim.dp.attendance.R
+import sk.stuba.fei.uim.dp.attendance.data.DataRepository
 import sk.stuba.fei.uim.dp.attendance.databinding.FragmentSignupBinding
 import sk.stuba.fei.uim.dp.attendance.viewmodels.AuthViewModel
 
@@ -19,7 +20,7 @@ class SignupFragment : Fragment(R.layout.fragment_signup) {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProvider(requireActivity(), object: ViewModelProvider.Factory{
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return AuthViewModel() as T
+                return AuthViewModel(DataRepository.getInstance(requireContext())) as T
             }
         })[AuthViewModel::class.java]
     }

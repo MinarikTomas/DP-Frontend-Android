@@ -7,6 +7,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.Body
 import retrofit2.http.POST
+import sk.stuba.fei.uim.dp.attendance.config.AppConfig
 import sk.stuba.fei.uim.dp.attendance.data.api.model.LoginRequest
 import sk.stuba.fei.uim.dp.attendance.data.api.model.LoginResponse
 
@@ -18,7 +19,7 @@ interface ApiService {
     companion object {
         fun create(context: Context): ApiService {
             val retrofit = Retrofit.Builder()
-                .baseUrl("http://localhost:8080")
+                .baseUrl(AppConfig.BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
 
