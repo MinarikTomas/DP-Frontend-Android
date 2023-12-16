@@ -2,6 +2,7 @@ package sk.stuba.fei.uim.dp.attendance.data
 
 import android.content.Context
 import android.util.Log
+import com.auth0.android.jwt.JWT
 import sk.stuba.fei.uim.dp.attendance.data.api.ApiService
 import sk.stuba.fei.uim.dp.attendance.data.api.model.LoginRequest
 import sk.stuba.fei.uim.dp.attendance.data.model.User
@@ -40,8 +41,15 @@ class DataRepository private constructor(
             val response = service.loginUser(LoginRequest(email, password))
             if(response.isSuccessful){
                 response.body()?.let {
+                    val jwt = JWT(it.accessToken)
                     Log.d("API", "success")
-                    return Pair("", User("", email, it.uid, it.accessToken))
+                    return Pair("", User(
+                        jwt.getClaim("fullName").asString(),
+                        jwt.subject,
+                        jwt.getClaim("id").asInt(),
+                        it.accessToken
+                        )
+                    )
                 }
             }
             return Pair("Failed to login user", null)
