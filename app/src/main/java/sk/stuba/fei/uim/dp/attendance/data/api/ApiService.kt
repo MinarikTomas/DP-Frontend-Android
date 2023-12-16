@@ -8,12 +8,16 @@ import retrofit2.http.Body
 import retrofit2.http.POST
 import sk.stuba.fei.uim.dp.attendance.config.AppConfig
 import sk.stuba.fei.uim.dp.attendance.data.api.model.LoginRequest
-import sk.stuba.fei.uim.dp.attendance.data.api.model.LoginResponse
+import sk.stuba.fei.uim.dp.attendance.data.api.model.AuthResponse
+import sk.stuba.fei.uim.dp.attendance.data.api.model.SignupRequest
 
 interface ApiService {
 
     @POST("auth/login")
-    suspend fun loginUser(@Body userInfo: LoginRequest): Response<LoginResponse>
+    suspend fun loginUser(@Body userInfo: LoginRequest): Response<AuthResponse>
+
+    @POST("auth/signup")
+    suspend fun signupUser(@Body userInfo: SignupRequest): Response<AuthResponse>
 
     companion object {
         fun create(context: Context): ApiService {

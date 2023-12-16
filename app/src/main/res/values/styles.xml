@@ -5,6 +5,7 @@
         <item name="android:textColorHint">@color/blue</item>
         <item name="placeholderTextColor">#159835</item>
         <item name="boxStrokeWidth">2dp</item>
+<!--        <item name="errorEnabled">true</item>-->
         <item name="boxStrokeColor">@color/text_input_layout_stroke_color</item>
 
     </style>

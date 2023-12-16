@@ -4,7 +4,9 @@ import android.content.Context
 import android.util.Log
 import com.auth0.android.jwt.JWT
 import sk.stuba.fei.uim.dp.attendance.data.api.ApiService
+import sk.stuba.fei.uim.dp.attendance.data.api.model.CardRequest
 import sk.stuba.fei.uim.dp.attendance.data.api.model.LoginRequest
+import sk.stuba.fei.uim.dp.attendance.data.api.model.SignupRequest
 import sk.stuba.fei.uim.dp.attendance.data.model.User
 import java.io.IOException
 
@@ -61,5 +63,38 @@ class DataRepository private constructor(
             ex.printStackTrace()
         }
         return Pair("Fatal error. Failed to login user.", null)
+    }
+
+    suspend fun apiSignupUser(
+        name: String,
+        email: String,
+        password: String,
+        cardName: String,
+        cardSerialNumber: String
+    ): Pair<String, User?>{
+        try {
+            val response = service.signupUser(SignupRequest(name, email, password, CardRequest(cardName, cardSerialNumber)))
+            if (response.isSuccessful){
+                response.body()?.let {
+                    val jwt = JWT(it.accessToken)
+                    Log.d("API", "success")
+                    return Pair("", User(
+                        jwt.getClaim("fullName").asString(),
+                        jwt.subject,
+                        jwt.getClaim("id").asInt(),
+                        it.accessToken
+                        )
+                    )
+                }
+            }
+            return Pair("Failed to signup user", null)
+        }catch (ex: IOException) {
+            ex.printStackTrace()
+            Log.d("API", ex.message.toString())
+            return Pair("Check internet connection. Failed to signup user.", null)
+        } catch (ex: Exception) {
+            ex.printStackTrace()
+        }
+        return Pair("Fatal error. Failed to signup user.", null)
     }
 }

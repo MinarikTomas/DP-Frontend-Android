@@ -9,8 +9,8 @@ import sk.stuba.fei.uim.dp.attendance.data.DataRepository
 import sk.stuba.fei.uim.dp.attendance.data.model.User
 
 class AuthViewModel(private val dataRepository: DataRepository): ViewModel() {
-    private val _registrationResult = MutableLiveData<String>()
-    val registrationResult: LiveData<String> get() = _registrationResult
+    private val _signupResult = MutableLiveData<String>()
+    val signupResult: LiveData<String> get() = _signupResult
 
     private val _loginResult = MutableLiveData<String>()
     val loginResult: LiveData<String> get() = _loginResult
@@ -22,7 +22,7 @@ class AuthViewModel(private val dataRepository: DataRepository): ViewModel() {
     val email = MutableLiveData<String>()
     val password = MutableLiveData<String>()
     val repeatPassword = MutableLiveData<String>()
-
+    val cardName = MutableLiveData<String>()
 
     fun loginUser() {
         viewModelScope.launch {
@@ -32,6 +32,23 @@ class AuthViewModel(private val dataRepository: DataRepository): ViewModel() {
             )
             _loginResult.postValue(result.first ?: "")
             _userResult.postValue(result.second)
+        }
+    }
+
+    fun signupUser(serialNumber: String){
+        if (!fullName.value.isNullOrEmpty() && !email.value.isNullOrEmpty() &&
+            !password.value.isNullOrEmpty() && !repeatPassword.value.isNullOrEmpty()){
+            viewModelScope.launch {
+                val result = dataRepository.apiSignupUser(
+                    fullName.value ?: "",
+                    email.value ?: "",
+                    password.value ?: "",
+                    cardName.value ?: "",
+                    serialNumber
+                )
+                _signupResult.postValue(result.first ?: "")
+                _userResult.postValue(result.second)
+            }
         }
     }
 }
