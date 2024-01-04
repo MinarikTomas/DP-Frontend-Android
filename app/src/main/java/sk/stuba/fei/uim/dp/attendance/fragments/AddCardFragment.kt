@@ -4,11 +4,14 @@ import android.app.PendingIntent
 import android.content.Intent
 import android.nfc.NfcAdapter
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.findNavController
+import com.google.android.material.snackbar.Snackbar
 import sk.stuba.fei.uim.dp.attendance.R
 import sk.stuba.fei.uim.dp.attendance.data.DataRepository
 import sk.stuba.fei.uim.dp.attendance.databinding.FragmentAddCardBinding
@@ -38,9 +41,42 @@ class AddCardFragment : Fragment(R.layout.fragment_add_card) {
 
            bnd.btnScan.apply {
                setOnClickListener {
+                   val nfcAdapter = NfcAdapter.getDefaultAdapter(requireContext())
 
+                   nfcAdapter?.enableReaderMode(
+                       requireActivity(),
+                       NfcAdapter.ReaderCallback { tag ->
+                           Log.d("NfcActivity", "tag discovered")
+                           Log.d("NfcActivity", tag.id.toHex())
+                           viewModel.signupUser(tag.id.toHex())
+                       },
+                       NfcAdapter.FLAG_READER_NFC_A or
+                               NfcAdapter.FLAG_READER_NFC_B or
+                               NfcAdapter.FLAG_READER_NFC_F or
+                               NfcAdapter.FLAG_READER_NFC_V,
+                       null
+                   )
                }
            }
+
+            viewModel.signupResult.observe(viewLifecycleOwner){
+                if(it.isNotEmpty()){
+                    Snackbar.make(
+                        view.findViewById(R.id.btn_scan),
+                        it,
+                        Snackbar.LENGTH_SHORT
+                    ).show()
+                }
+            }
+
+            viewModel.userResult.observe(viewLifecycleOwner){
+                it?.let {
+                    requireView().findNavController().navigate(R.id.action_add_card_to_home)
+                }
+            }
         }
     }
+
+    fun ByteArray.toHex(): String = joinToString(separator = "") { eachByte -> "%02x".format(eachByte) }
+
 }

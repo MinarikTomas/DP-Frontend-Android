@@ -41,6 +41,10 @@
         android:id="@+id/fragment_add_card"
         android:name="sk.stuba.fei.uim.dp.attendance.fragments.AddCardFragment"
         android:label="AddCardFragment">
+
+        <action
+            android:id="@+id/action_add_card_to_home"
+            app:destination="@+id/fragment_home"/>
         
     </fragment>
 
