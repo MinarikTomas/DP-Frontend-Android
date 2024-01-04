@@ -12,20 +12,20 @@ import com.google.android.material.snackbar.Snackbar
 import sk.stuba.fei.uim.dp.attendance.R
 import sk.stuba.fei.uim.dp.attendance.data.DataRepository
 import sk.stuba.fei.uim.dp.attendance.databinding.FragmentAddCardBinding
-import sk.stuba.fei.uim.dp.attendance.viewmodels.AuthViewModel
+import sk.stuba.fei.uim.dp.attendance.viewmodels.SignupViewModel
 
 class AddCardFragment : Fragment(R.layout.fragment_add_card) {
 
     private var binding: FragmentAddCardBinding ?= null
-    private lateinit var viewModel: AuthViewModel
+    private lateinit var viewModel: SignupViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProvider(requireActivity(), object: ViewModelProvider.Factory{
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return AuthViewModel(DataRepository.getInstance(requireContext())) as T
+                return SignupViewModel(DataRepository.getInstance(requireContext())) as T
             }
-        })[AuthViewModel::class.java]
+        })[SignupViewModel::class.java]
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
