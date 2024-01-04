@@ -46,8 +46,7 @@ class AuthViewModel(private val dataRepository: DataRepository): ViewModel() {
                     cardName.value ?: "",
                     serialNumber
                 )
-                _signupResult.postValue(result.first ?: "")
-                _userResult.postValue(result.second)
+                _signupResult.postValue(result)
             }
         }
     }

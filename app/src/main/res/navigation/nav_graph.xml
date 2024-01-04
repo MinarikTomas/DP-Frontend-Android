@@ -43,8 +43,8 @@
         android:label="AddCardFragment">
 
         <action
-            android:id="@+id/action_add_card_to_home"
-            app:destination="@+id/fragment_home"/>
+            android:id="@+id/action_add_card_to_login"
+            app:destination="@+id/fragment_login"/>
         
     </fragment>
 

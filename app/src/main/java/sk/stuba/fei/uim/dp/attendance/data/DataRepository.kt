@@ -71,30 +71,20 @@ class DataRepository private constructor(
         password: String,
         cardName: String,
         cardSerialNumber: String
-    ): Pair<String, User?>{
+    ): String{
         try {
             val response = service.signupUser(SignupRequest(name, email, password, CardRequest(cardName, cardSerialNumber)))
             if (response.isSuccessful){
-                response.body()?.let {
-                    val jwt = JWT(it.accessToken)
-                    Log.d("API", "success")
-                    return Pair("", User(
-                        jwt.getClaim("fullName").asString(),
-                        jwt.subject,
-                        jwt.getClaim("id").asInt(),
-                        it.accessToken
-                        )
-                    )
-                }
+                return ""
             }
-            return Pair("Failed to signup user", null)
+            return "Failed to signup user"
         }catch (ex: IOException) {
             ex.printStackTrace()
             Log.d("API", ex.message.toString())
-            return Pair("Check internet connection. Failed to signup user.", null)
+            return "Check internet connection. Failed to signup user."
         } catch (ex: Exception) {
             ex.printStackTrace()
         }
-        return Pair("Fatal error. Failed to signup user.", null)
+        return "Fatal error. Failed to signup user."
     }
 }

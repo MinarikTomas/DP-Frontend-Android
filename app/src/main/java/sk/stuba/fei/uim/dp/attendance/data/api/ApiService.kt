@@ -17,7 +17,7 @@ interface ApiService {
     suspend fun loginUser(@Body userInfo: LoginRequest): Response<AuthResponse>
 
     @POST("auth/signup")
-    suspend fun signupUser(@Body userInfo: SignupRequest): Response<AuthResponse>
+    suspend fun signupUser(@Body userInfo: SignupRequest): Response<Void>
 
     companion object {
         fun create(context: Context): ApiService {

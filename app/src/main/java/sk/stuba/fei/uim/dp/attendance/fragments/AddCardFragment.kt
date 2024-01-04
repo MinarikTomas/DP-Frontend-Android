@@ -1,12 +1,9 @@
 package sk.stuba.fei.uim.dp.attendance.fragments
 
-import android.app.PendingIntent
-import android.content.Intent
 import android.nfc.NfcAdapter
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -15,7 +12,6 @@ import com.google.android.material.snackbar.Snackbar
 import sk.stuba.fei.uim.dp.attendance.R
 import sk.stuba.fei.uim.dp.attendance.data.DataRepository
 import sk.stuba.fei.uim.dp.attendance.databinding.FragmentAddCardBinding
-import sk.stuba.fei.uim.dp.attendance.databinding.FragmentLoginBinding
 import sk.stuba.fei.uim.dp.attendance.viewmodels.AuthViewModel
 
 class AddCardFragment : Fragment(R.layout.fragment_add_card) {
@@ -66,12 +62,13 @@ class AddCardFragment : Fragment(R.layout.fragment_add_card) {
                         it,
                         Snackbar.LENGTH_SHORT
                     ).show()
-                }
-            }
-
-            viewModel.userResult.observe(viewLifecycleOwner){
-                it?.let {
-                    requireView().findNavController().navigate(R.id.action_add_card_to_home)
+                }else{
+                    Snackbar.make(
+                        view.findViewById(R.id.btn_scan),
+                        "Successfully signed up",
+                        Snackbar.LENGTH_SHORT
+                    ).show()
+                    requireView().findNavController().navigate(R.id.action_add_card_to_login)
                 }
             }
         }
