@@ -9,6 +9,7 @@ import androidx.navigation.findNavController
 import com.google.android.material.snackbar.Snackbar
 import sk.stuba.fei.uim.dp.attendance.R
 import sk.stuba.fei.uim.dp.attendance.data.DataRepository
+import sk.stuba.fei.uim.dp.attendance.data.PreferenceData
 import sk.stuba.fei.uim.dp.attendance.databinding.FragmentLoginBinding
 import sk.stuba.fei.uim.dp.attendance.viewmodels.LoginViewModel
 
@@ -32,6 +33,10 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
             lifecycleOwner = viewLifecycleOwner
             model = viewModel
         }.also { bnd ->
+            val user = PreferenceData.getInstance().getUser(requireContext())
+            if(user != null){
+                requireView().findNavController().navigate(R.id.action_login_home)
+            }
             bnd.signup.apply {
                 setOnClickListener {
                     it.findNavController().navigate(R.id.action_login_signup)
@@ -46,6 +51,13 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                         Snackbar.LENGTH_SHORT
                     ).show()
                 }
+            }
+
+            viewModel.userResult.observe(viewLifecycleOwner){
+                it?.let { user ->
+                    PreferenceData.getInstance().putUser(requireContext(), user)
+                    requireView().findNavController().navigate(R.id.action_login_home)
+                } ?: PreferenceData.getInstance().putUser(requireContext(), null)
             }
         }
     }

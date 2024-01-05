@@ -20,6 +20,10 @@
             android:id="@+id/action_login_signup"
             app:destination="@+id/fragment_signup"/>
 
+        <action
+            android:id="@+id/action_login_home"
+            app:destination="@+id/fragment_home"/>
+
     </fragment>
 
     <fragment
