@@ -9,6 +9,9 @@
         android:name="sk.stuba.fei.uim.dp.attendance.fragments.HomeFragment"
         android:label="HomeFragment">
 
+        <action
+            android:id="@+id/action_home_login"
+            app:destination="@+id/fragment_login"/>
     </fragment>
 
     <fragment
@@ -52,5 +55,19 @@
         
     </fragment>
 
+    <fragment
+        android:id="@+id/fragment_add_activity"
+        android:name="sk.stuba.fei.uim.dp.attendance.fragments.AddActivityFragment"
+        android:label="AddActivityFragment">
+
+        <action
+            android:id="@+id/action_add_activity_home"
+            app:destination="@+id/fragment_home"/>
+
+    </fragment>
+
+    <action
+        android:id="@+id/action_to_add_activity"
+        app:destination="@+id/fragment_add_activity"/>
 
 </navigation>

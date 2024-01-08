@@ -59,6 +59,10 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                     requireView().findNavController().navigate(R.id.action_login_home)
                 } ?: PreferenceData.getInstance().putUser(requireContext(), null)
             }
+
+            bnd.title.setOnClickListener {
+                it.findNavController().navigate(R.id.action_login_home)
+            }
         }
     }
 

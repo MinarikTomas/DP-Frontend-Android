@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.Log
 import com.auth0.android.jwt.JWT
 import sk.stuba.fei.uim.dp.attendance.data.api.ApiService
+import sk.stuba.fei.uim.dp.attendance.data.api.model.AddActivityRequest
 import sk.stuba.fei.uim.dp.attendance.data.api.model.CardRequest
 import sk.stuba.fei.uim.dp.attendance.data.api.model.LoginRequest
 import sk.stuba.fei.uim.dp.attendance.data.api.model.SignupRequest
@@ -80,11 +81,41 @@ class DataRepository private constructor(
             return "Failed to signup user"
         }catch (ex: IOException) {
             ex.printStackTrace()
-            Log.d("API", ex.message.toString())
             return "Check internet connection. Failed to signup user."
         } catch (ex: Exception) {
             ex.printStackTrace()
         }
         return "Fatal error. Failed to signup user."
+    }
+
+    suspend fun apiAddActivity(
+        uid: Number,
+        name: String,
+        location: String,
+        date: String,
+        time: String,
+        weeks: Number
+    ): String{
+        try{
+            val response = service.addActivity(AddActivityRequest(
+                uid,
+                name,
+                location,
+                date + " " + time,
+                weeks
+            ))
+            if(response.isSuccessful){
+                return ""
+            }
+            Log.d("API", response.message())
+            return "Failed to create activity"
+        }catch (ex: IOException) {
+            ex.printStackTrace()
+            Log.d("API", ex.message.toString())
+            return "Check internet connection. Failed to create activity"
+        } catch (ex: Exception) {
+            ex.printStackTrace()
+        }
+        return "Fatal error. Failed to create activity"
     }
 }
