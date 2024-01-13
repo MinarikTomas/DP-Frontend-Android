@@ -62,11 +62,15 @@ class AddActivityFragment : Fragment(R.layout.fragment_add_activity) {
                 viewModel.date.value = sdf.format(it)
             }
             timePicker.addOnPositiveButtonClickListener {
-                viewModel.time.value = timePicker.hour.toString() + ":" +
-                        when(timePicker.minute.toString().length < 2){
-                            true -> "0" + timePicker.minute
-                            false -> timePicker.minute
-                        }
+                viewModel.time.value =
+                    when(timePicker.hour.toString().length < 2){
+                        true -> "0" + timePicker.hour
+                        false -> timePicker.hour.toString()
+                    } + ":" +
+                    when(timePicker.minute.toString().length < 2){
+                        true -> "0" + timePicker.minute
+                        false -> timePicker.minute
+                    }
             }
 
             bnd.btnSave.apply {
@@ -85,6 +89,7 @@ class AddActivityFragment : Fragment(R.layout.fragment_add_activity) {
                         Snackbar.LENGTH_SHORT
                     ).show()
                 }else{
+                    viewModel.clear()
                     requireView().findNavController().navigate(R.id.action_add_activity_home)
                 }
             }

@@ -30,4 +30,11 @@ class AddActivityViewModel(private val dataRepository: DataRepository): ViewMode
             _addActivityResult.postValue(result)
         }
     }
+
+    fun clear(){
+        name.value = ""
+        location.value = ""
+        time.value = ""
+        date.value = ""
+    }
 }

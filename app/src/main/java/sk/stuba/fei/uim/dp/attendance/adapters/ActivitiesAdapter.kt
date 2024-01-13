@@ -4,8 +4,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import sk.stuba.fei.uim.dp.attendance.R
+import sk.stuba.fei.uim.dp.attendance.utils.ItemDiffCallback
 
 data class MyItem(val theView: Int, val id: Number, val name: String, val location: String, val time: String, val date: String)
 class ActivitiesAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -58,9 +60,12 @@ class ActivitiesAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         return items[position].theView
     }
 
-    fun updateItems(newItems: List<MyItem>){
+    fun updateItems(newItems: List<MyItem>) {
+        val diffCallback = ItemDiffCallback(items, newItems)
+        val diffResult = DiffUtil.calculateDiff(diffCallback)
+
         items = newItems
-        notifyDataSetChanged()
+        diffResult.dispatchUpdatesTo(this)
     }
 
 }
