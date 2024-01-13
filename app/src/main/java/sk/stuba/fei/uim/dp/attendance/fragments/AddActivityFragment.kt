@@ -76,8 +76,19 @@ class AddActivityFragment : Fragment(R.layout.fragment_add_activity) {
             bnd.btnSave.apply {
                 setOnClickListener {
                     viewModel.addActivity(
-                        PreferenceData.getInstance().getUser(requireContext())?.id ?: -1
+                        PreferenceData.getInstance().getUser(requireContext())?.id ?: -1,
+                        bnd.repeatCheckbox.isChecked
                     )
+                }
+            }
+
+            bnd.repeatCheckbox.apply {
+                setOnCheckedChangeListener { _, isChecked ->
+                    if(isChecked){
+                        bnd.weeks.visibility = View.VISIBLE
+                    }else{
+                        bnd.weeks.visibility = View.GONE
+                    }
                 }
             }
 
