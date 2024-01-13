@@ -58,7 +58,7 @@ class AddActivityFragment : Fragment(R.layout.fragment_add_activity) {
             }
             datePicker.addOnPositiveButtonClickListener {
                 timePicker.show(parentFragmentManager, "TIME_PICKER")
-                val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+                val sdf = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
                 viewModel.date.value = sdf.format(it)
             }
             timePicker.addOnPositiveButtonClickListener {

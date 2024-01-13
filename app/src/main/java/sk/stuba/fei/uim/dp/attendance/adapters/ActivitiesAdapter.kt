@@ -7,7 +7,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import sk.stuba.fei.uim.dp.attendance.R
 
-data class MyItem(val theView: Int, val title: String, val location: String, val time: String, val date: String)
+data class MyItem(val theView: Int, val id: Number, val name: String, val location: String, val time: String, val date: String)
 class ActivitiesAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     companion object {
@@ -25,7 +25,7 @@ class ActivitiesAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private inner class ActivityViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         fun bind(position: Int){
-            itemView.findViewById<TextView>(R.id.item_title).text = items[position].title
+            itemView.findViewById<TextView>(R.id.item_title).text = items[position].name
             itemView.findViewById<TextView>(R.id.item_location).text = items[position].location
             itemView.findViewById<TextView>(R.id.item_time).text = items[position].time
         }

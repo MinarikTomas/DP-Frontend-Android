@@ -8,6 +8,7 @@ import sk.stuba.fei.uim.dp.attendance.data.api.model.AddActivityRequest
 import sk.stuba.fei.uim.dp.attendance.data.api.model.CardRequest
 import sk.stuba.fei.uim.dp.attendance.data.api.model.LoginRequest
 import sk.stuba.fei.uim.dp.attendance.data.api.model.SignupRequest
+import sk.stuba.fei.uim.dp.attendance.data.model.Activity
 import sk.stuba.fei.uim.dp.attendance.data.model.User
 import java.io.IOException
 
@@ -107,7 +108,6 @@ class DataRepository private constructor(
             if(response.isSuccessful){
                 return ""
             }
-            Log.d("API", response.message())
             return "Failed to create activity"
         }catch (ex: IOException) {
             ex.printStackTrace()
@@ -117,5 +117,37 @@ class DataRepository private constructor(
             ex.printStackTrace()
         }
         return "Fatal error. Failed to create activity"
+    }
+
+    suspend fun apiGetCreatedActivities(uid: Number): Pair<String, List<Activity>>
+    {
+        try{
+            val response = service.getCreatedActivities(uid)
+            if (response.isSuccessful){
+                response.body()?.let {
+                    val activities = it.map{
+                        Activity(
+                            it.id,
+                            it.name,
+                            it.location,
+                            it.time.split(" ")[0],
+                            it.time.split(" ")[1],
+                            it.createdBy,
+                            it.startTime,
+                            it.endTime
+                        )
+                    }
+                    return Pair("", activities)
+                }
+            }
+            return Pair("Failed to load activities", emptyList())
+        }catch (ex: IOException) {
+            ex.printStackTrace()
+            Log.d("API", ex.message.toString())
+            return Pair("Check internet connection. Failed to load activities", emptyList())
+        } catch (ex: Exception) {
+            ex.printStackTrace()
+        }
+        return Pair("Fatal error. Failed to create activity", emptyList())
     }
 }

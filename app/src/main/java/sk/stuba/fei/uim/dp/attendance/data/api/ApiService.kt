@@ -6,12 +6,15 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.Body
+import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.Path
 import sk.stuba.fei.uim.dp.attendance.config.AppConfig
 import sk.stuba.fei.uim.dp.attendance.data.api.helper.AuthInterceptor
 import sk.stuba.fei.uim.dp.attendance.data.api.model.AddActivityRequest
 import sk.stuba.fei.uim.dp.attendance.data.api.model.LoginRequest
 import sk.stuba.fei.uim.dp.attendance.data.api.model.AuthResponse
+import sk.stuba.fei.uim.dp.attendance.data.api.model.GetActivityResponse
 import sk.stuba.fei.uim.dp.attendance.data.api.model.SignupRequest
 
 interface ApiService {
@@ -24,6 +27,9 @@ interface ApiService {
 
     @POST("activity")
     suspend fun addActivity(@Body activityInfo: AddActivityRequest): Response<Void>
+
+    @GET("user/{id}/activities?type=created")
+    suspend fun getCreatedActivities(@Path("id") uid: Number): Response<List<GetActivityResponse>>
 
     companion object {
         fun create(context: Context): ApiService {

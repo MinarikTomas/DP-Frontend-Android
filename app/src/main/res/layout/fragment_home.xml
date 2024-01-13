@@ -7,6 +7,9 @@
         <variable
             name="model"
             type="sk.stuba.fei.uim.dp.attendance.viewmodels.HomeViewModel" />
+        <variable
+            name="add_activity_model"
+            type="sk.stuba.fei.uim.dp.attendance.viewmodels.AddActivityViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
