@@ -23,6 +23,7 @@ class AddActivityFragment : Fragment(R.layout.fragment_add_activity) {
 
     private var binding: FragmentAddActivityBinding ?= null
     private lateinit var viewModel: AddActivityViewModel
+    private var activityAdded = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -79,6 +80,7 @@ class AddActivityFragment : Fragment(R.layout.fragment_add_activity) {
                         PreferenceData.getInstance().getUser(requireContext())?.id ?: -1,
                         bnd.repeatCheckbox.isChecked
                     )
+                    activityAdded = true
                 }
             }
 
@@ -93,18 +95,26 @@ class AddActivityFragment : Fragment(R.layout.fragment_add_activity) {
             }
 
             viewModel.addActivityResult.observe(viewLifecycleOwner){
+                if(!activityAdded) return@observe
                 if(it.isNotEmpty()){
                     Snackbar.make(
                         view.findViewById(R.id.btn_save),
                         it,
                         Snackbar.LENGTH_SHORT
                     ).show()
+                    activityAdded = false
                 }else{
+                    activityAdded = true
                     viewModel.clear()
                     requireView().findNavController().navigate(R.id.action_add_activity_home)
                 }
             }
         }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        activityAdded = false
     }
 
     override fun onDestroyView() {
