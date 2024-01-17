@@ -36,6 +36,20 @@ class PreferenceData private constructor() {
         return User.fromJson(json)
     }
 
+    fun putIsActivityRunning(context: Context?, isRunning: Boolean) {
+        val sharedPref = getSharedPreferences(context) ?: return
+        val editor = sharedPref.edit()
+        editor.putBoolean(runningKey, isRunning)
+
+        editor.apply()
+    }
+
+    fun getIsActivityRunning(context: Context?): Boolean {
+        val sharedPref = getSharedPreferences(context) ?: return false
+        val isRunning = sharedPref.getBoolean(runningKey, false)
+        return isRunning
+    }
+
     companion object {
         @Volatile
         private var INSTANCE: PreferenceData? = null
@@ -50,7 +64,6 @@ class PreferenceData private constructor() {
 
         private const val shpKey = AppConfig.SHARED_PREFERENCES_KEY
         private const val userKey = "userKey"
-
-
+        private const val runningKey = "runningKey"
     }
 }

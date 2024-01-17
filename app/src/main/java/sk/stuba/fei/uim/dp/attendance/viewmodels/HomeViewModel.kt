@@ -14,7 +14,7 @@ class HomeViewModel(private val dataRepository: DataRepository): ViewModel() {
     private val _getActivitiesResult = MutableLiveData<String>()
     val getActivitiesResult: LiveData<String> get() = _getActivitiesResult
 
-    fun getCreatedActivities(uid: Number){
+    fun getCreatedActivities(uid: Int){
         viewModelScope.launch {
             val result = dataRepository.apiGetCreatedActivities(uid)
             _getActivitiesResult.postValue(result.first ?: "")

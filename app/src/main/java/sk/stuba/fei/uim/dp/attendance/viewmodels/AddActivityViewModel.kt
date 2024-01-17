@@ -18,7 +18,7 @@ class AddActivityViewModel(private val dataRepository: DataRepository): ViewMode
     val date = MutableLiveData<String>()
     val weeks = MutableLiveData<String>()
 
-    fun addActivity(uid: Number, repeat: Boolean){
+    fun addActivity(uid: Int, repeat: Boolean){
         viewModelScope.launch {
             val result = dataRepository.apiAddActivity(
                 uid,

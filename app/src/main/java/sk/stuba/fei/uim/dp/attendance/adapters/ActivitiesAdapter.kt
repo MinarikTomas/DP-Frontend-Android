@@ -4,12 +4,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import sk.stuba.fei.uim.dp.attendance.R
-import sk.stuba.fei.uim.dp.attendance.utils.ItemDiffCallback
+import sk.stuba.fei.uim.dp.attendance.data.model.Activity
+import sk.stuba.fei.uim.dp.attendance.fragments.HomeFragmentDirections
+import sk.stuba.fei.uim.dp.attendance.utils.ActivityItemDiffCallback
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
-data class MyItem(val theView: Int, val id: Number, val name: String, val location: String, val time: String, val date: String)
+data class ActivityItem(val theView: Int, val activity: Activity)
 class ActivitiesAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     companion object {
@@ -17,19 +22,26 @@ class ActivitiesAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         const val THE_ACTIVITY_VIEW = 2
     }
 
-    private var items: List<MyItem> = listOf()
+    private var items: List<ActivityItem> = listOf()
 
     private inner class DateViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         fun bind(position: Int){
-            itemView.findViewById<TextView>(R.id.item_date).text = items[position].date
+            val date = LocalDate.parse(items[position].activity.date, DateTimeFormatter.ofPattern("dd.MM.yyyy"))
+            if (date.isEqual(LocalDate.now())){
+                itemView.findViewById<TextView>(R.id.item_date).text = "Today"
+            }else if(date.plusDays(1).isEqual(LocalDate.now())){
+                itemView.findViewById<TextView>(R.id.item_date).text = "Tomorrow"
+            }else{
+                itemView.findViewById<TextView>(R.id.item_date).text = items[position].activity.date
+            }
         }
     }
 
     private inner class ActivityViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         fun bind(position: Int){
-            itemView.findViewById<TextView>(R.id.item_title).text = items[position].name
-            itemView.findViewById<TextView>(R.id.item_location).text = items[position].location
-            itemView.findViewById<TextView>(R.id.item_time).text = items[position].time
+            itemView.findViewById<TextView>(R.id.item_title).text = items[position].activity.name
+            itemView.findViewById<TextView>(R.id.item_location).text = items[position].activity.location
+            itemView.findViewById<TextView>(R.id.item_time).text = items[position].activity.time
         }
     }
 
@@ -49,6 +61,10 @@ class ActivitiesAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             (holder as DateViewHolder).bind(position)
         }else {
             (holder as ActivityViewHolder).bind(position)
+            holder.itemView.setOnClickListener {
+                val action = HomeFragmentDirections.actionHomeActivity(items[position].activity.id.toInt())
+                holder.itemView.findNavController().navigate(action)
+            }
         }
     }
 
@@ -60,8 +76,8 @@ class ActivitiesAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         return items[position].theView
     }
 
-    fun updateItems(newItems: List<MyItem>) {
-        val diffCallback = ItemDiffCallback(items, newItems)
+    fun updateItems(newItems: List<ActivityItem>) {
+        val diffCallback = ActivityItemDiffCallback(items, newItems)
         val diffResult = DiffUtil.calculateDiff(diffCallback)
 
         items = newItems

@@ -106,4 +106,9 @@ class AddActivityFragment : Fragment(R.layout.fragment_add_activity) {
             }
         }
     }
+
+    override fun onDestroyView() {
+        binding = null
+        super.onDestroyView()
+    }
 }

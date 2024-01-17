@@ -5,6 +5,7 @@ import android.util.Log
 import com.auth0.android.jwt.JWT
 import sk.stuba.fei.uim.dp.attendance.data.api.ApiService
 import sk.stuba.fei.uim.dp.attendance.data.api.model.AddActivityRequest
+import sk.stuba.fei.uim.dp.attendance.data.api.model.AddParticipantRequest
 import sk.stuba.fei.uim.dp.attendance.data.api.model.CardRequest
 import sk.stuba.fei.uim.dp.attendance.data.api.model.LoginRequest
 import sk.stuba.fei.uim.dp.attendance.data.api.model.SignupRequest
@@ -90,12 +91,12 @@ class DataRepository private constructor(
     }
 
     suspend fun apiAddActivity(
-        uid: Number,
+        uid: Int,
         name: String,
         location: String,
         date: String,
         time: String,
-        weeks: Number
+        weeks: Int
     ): String{
         try{
             val response = service.addActivity(AddActivityRequest(
@@ -119,7 +120,7 @@ class DataRepository private constructor(
         return "Fatal error. Failed to create activity"
     }
 
-    suspend fun apiGetCreatedActivities(uid: Number): Pair<String, List<Activity>>
+    suspend fun apiGetCreatedActivities(uid: Int): Pair<String, List<Activity>>
     {
         try{
             val response = service.getCreatedActivities(uid)
@@ -133,6 +134,7 @@ class DataRepository private constructor(
                             it.time.split(" ")[0],
                             it.time.split(" ")[1],
                             it.createdBy,
+                            null,
                             it.startTime,
                             it.endTime
                         )
@@ -148,6 +150,91 @@ class DataRepository private constructor(
         } catch (ex: Exception) {
             ex.printStackTrace()
         }
-        return Pair("Fatal error. Failed to create activity", emptyList())
+        return Pair("Fatal error. Failed to load activities", emptyList())
+    }
+
+    suspend fun apiGetActivity(id: Int): Pair<String, Activity?>{
+        try{
+            val response = service.getActivity(id)
+            if(response.isSuccessful){
+                response.body()?.let {
+                    return Pair("", Activity(
+                        it.id,
+                        it.name,
+                        it.location,
+                        it.time.split(" ")[0],
+                        it.time.split(" ")[1],
+                        it.createdBy,
+                        it.participants.map {user-> User(user?.fullName, "", -1, "") },
+                        it.startTime,
+                        it.endTime
+                        )
+                    )
+                }
+            }
+            return Pair("Failed to load activity", null)
+        }catch (ex: IOException) {
+            ex.printStackTrace()
+            Log.d("API", ex.message.toString())
+            return Pair("Check internet connection. Failed to load activity", null)
+        } catch (ex: Exception) {
+            ex.printStackTrace()
+        }
+        return Pair("Fatal error. Failed to load activity", null)
+    }
+
+    suspend fun apiStartActivity(id: Int): String {
+        try {
+            val response = service.startActivity(id)
+            if (response.isSuccessful){
+                return ""
+            }
+            return "Failed to start activity"
+        }catch (ex: IOException) {
+            ex.printStackTrace()
+            return "Check internet connection. Failed to start activity"
+        } catch (ex: Exception) {
+            ex.printStackTrace()
+        }
+        return "Fatal error. Failed to start activity"
+    }
+
+    suspend fun apiEndActivity(id: Int): String {
+        try {
+            val response = service.endActivity(id)
+            if (response.isSuccessful){
+                return ""
+            }
+            return "Failed to end activity"
+        }catch (ex: IOException) {
+            ex.printStackTrace()
+            return "Check internet connection. Failed to end activity"
+        } catch (ex: Exception) {
+            ex.printStackTrace()
+        }
+        return "Fatal error. Failed to end activity"
+    }
+
+    suspend fun apiAddParticipant(id: Int, serialNumber: String): Pair<String, User?>{
+        try{
+            val response = service.addParticipant(id, AddParticipantRequest(serialNumber))
+            if(response.isSuccessful){
+                response.body()?.let {
+                    return Pair("", User(
+                        it.fullName,
+                        it.email,
+                        it.id,
+                        ""
+                    ))
+                }
+            }
+            return Pair("Failed to add participant", null)
+        }catch (ex: IOException) {
+            ex.printStackTrace()
+            return Pair("Check internet connection. Failed to add participant", null)
+        } catch (ex: Exception) {
+            ex.printStackTrace()
+        }
+        return Pair("Fatal error. Failed to add participant", null)
     }
 }

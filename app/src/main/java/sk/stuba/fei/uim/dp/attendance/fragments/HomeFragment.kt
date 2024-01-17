@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import sk.stuba.fei.uim.dp.attendance.R
 import sk.stuba.fei.uim.dp.attendance.adapters.ActivitiesAdapter
-import sk.stuba.fei.uim.dp.attendance.adapters.MyItem
+import sk.stuba.fei.uim.dp.attendance.adapters.ActivityItem
 import sk.stuba.fei.uim.dp.attendance.data.DataRepository
 import sk.stuba.fei.uim.dp.attendance.data.PreferenceData
 import sk.stuba.fei.uim.dp.attendance.databinding.FragmentHomeBinding
@@ -77,24 +77,16 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             viewModel.activities.observe(viewLifecycleOwner){
                 it?.let {
                     if(it.isNotEmpty()){
-                       val items = ArrayList<MyItem>()
+                       val items = ArrayList<ActivityItem>()
                        it.forEachIndexed { index, activity ->
                            if(index == 0 || activity.date != it[index-1].date){
-                               items.add(MyItem(
+                               items.add(ActivityItem(
                                    ActivitiesAdapter.THE_DATE_VIEW,
-                                   -1,
-                                   "",
-                                   "",
-                                   "",
-                                   activity.date))
+                                   activity))
                            }
-                           items.add(MyItem(
+                           items.add(ActivityItem(
                                ActivitiesAdapter.THE_ACTIVITY_VIEW,
-                               activity.id,
-                               activity.name,
-                               activity.location,
-                               activity.time,
-                               activity.date
+                               activity
                            ))
                        }
                        activitiesAdapter.updateItems(items)
@@ -108,36 +100,5 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 }
             }
         }
-
-//        val dataList = ArrayList<MyItem>()
-//        dataList.add(MyItem(ActivitiesAdapter.THE_DATE_VIEW, date = "30.10.2024", location = "", time = "", name = ""))
-//        dataList.add(MyItem(ActivitiesAdapter.THE_ACTIVITY_VIEW, date = "30.10.2024", location = "D104", name = "Functional Programming", time = "10:00"))
-//        dataList.add(MyItem(ActivitiesAdapter.THE_ACTIVITY_VIEW, date = "30.10.2024", location = "AB300", name = "Team Project 1", time = "12:00"))
-//        dataList.add(MyItem(ActivitiesAdapter.THE_DATE_VIEW, date = "30.10.2024", location = "", time = "", name = ""))
-//        dataList.add(MyItem(ActivitiesAdapter.THE_ACTIVITY_VIEW, date = "31.10.2024", location = "AB300", name = "Network encryption", time = "12:00"))
-//        dataList.add(MyItem(ActivitiesAdapter.THE_DATE_VIEW, date = "1.11.2024", location = "", time = "", name = ""))
-//        dataList.add(MyItem(ActivitiesAdapter.THE_ACTIVITY_VIEW, date = "1.11.2024", location = "AB300", name = "Functional Programming", time = "10:00"))
-//        dataList.add(MyItem(ActivitiesAdapter.THE_ACTIVITY_VIEW, date = "1.11.2024", location = "AB300", name = "Team Project 1", time = "12:00"))
-//        dataList.add(MyItem(ActivitiesAdapter.THE_DATE_VIEW, date = "30.10.2024", location = "", time = "", name = ""))
-//        dataList.add(MyItem(ActivitiesAdapter.THE_ACTIVITY_VIEW, date = "30.10.2024", location = "D104", name = "Functional Programming", time = "10:00"))
-//        dataList.add(MyItem(ActivitiesAdapter.THE_ACTIVITY_VIEW, date = "30.10.2024", location = "AB300", name = "Team Project 1", time = "12:00"))
-//        dataList.add(MyItem(ActivitiesAdapter.THE_DATE_VIEW, date = "30.10.2024", location = "", time = "", name = ""))
-//        dataList.add(MyItem(ActivitiesAdapter.THE_ACTIVITY_VIEW, date = "31.10.2024", location = "AB300", name = "Network encryption", time = "12:00"))
-//        dataList.add(MyItem(ActivitiesAdapter.THE_DATE_VIEW, date = "1.11.2024", location = "", time = "", name = ""))
-//        dataList.add(MyItem(ActivitiesAdapter.THE_ACTIVITY_VIEW, date = "1.11.2024", location = "AB300", name = "Functional Programming", time = "10:00"))
-//        dataList.add(MyItem(ActivitiesAdapter.THE_ACTIVITY_VIEW, date = "1.11.2024", location = "AB300", name = "Team Project 1", time = "12:00"))
-//        dataList.add(MyItem(ActivitiesAdapter.THE_DATE_VIEW, date = "30.10.2024", location = "", time = "", name = ""))
-//        dataList.add(MyItem(ActivitiesAdapter.THE_ACTIVITY_VIEW, date = "30.10.2024", location = "D104", name = "Functional Programming", time = "10:00"))
-//        dataList.add(MyItem(ActivitiesAdapter.THE_ACTIVITY_VIEW, date = "30.10.2024", location = "AB300", name = "Team Project 1", time = "12:00"))
-//        dataList.add(MyItem(ActivitiesAdapter.THE_DATE_VIEW, date = "30.10.2024", location = "", time = "", name = ""))
-//        dataList.add(MyItem(ActivitiesAdapter.THE_ACTIVITY_VIEW, date = "31.10.2024", location = "AB300", name = "Network encryption", time = "12:00"))
-//        dataList.add(MyItem(ActivitiesAdapter.THE_DATE_VIEW, date = "1.11.2024", location = "", time = "", name = ""))
-//        dataList.add(MyItem(ActivitiesAdapter.THE_ACTIVITY_VIEW, date = "1.11.2024", location = "AB300", name = "Functional Programming", time = "10:00"))
-//        dataList.add(MyItem(ActivitiesAdapter.THE_ACTIVITY_VIEW, date = "1.11.2024", location = "AB300", name = "Team Project 1", time = "12:00"))
-
-
-
     }
-
-
 }

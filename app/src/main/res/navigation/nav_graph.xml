@@ -12,6 +12,13 @@
         <action
             android:id="@+id/action_home_login"
             app:destination="@+id/fragment_login"/>
+        <action
+            android:id="@+id/action_home_activity"
+            app:destination="@id/fragment_activity">
+            <argument
+                android:name="selected_activity_id"
+                app:argType="integer" />
+        </action>
     </fragment>
 
     <fragment
@@ -64,6 +71,12 @@
             android:id="@+id/action_add_activity_home"
             app:destination="@+id/fragment_home"/>
 
+    </fragment>
+
+    <fragment
+        android:id="@+id/fragment_activity"
+        android:name="sk.stuba.fei.uim.dp.attendance.fragments.ActivityFragment"
+        android:label="ActivityFragment">
     </fragment>
 
     <action

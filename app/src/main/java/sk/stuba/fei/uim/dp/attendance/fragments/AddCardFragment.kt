@@ -63,6 +63,7 @@ class AddCardFragment : Fragment(R.layout.fragment_add_card) {
                         Snackbar.LENGTH_SHORT
                     ).show()
                 }else{
+                    NfcAdapter.getDefaultAdapter(requireContext()).disableReaderMode(requireActivity())
                     Snackbar.make(
                         view.findViewById(R.id.btn_scan),
                         "Successfully signed up",

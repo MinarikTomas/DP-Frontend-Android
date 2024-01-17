@@ -9,9 +9,12 @@ data class SignupRequest(
     val card: CardRequest
 )
 data class AddActivityRequest(
-    val uid: Number,
+    val uid: Int,
     val name: String,
     val location: String,
     val time: String,
-    val weeks: Number
+    val weeks: Int
+)
+data class AddParticipantRequest(
+    val serialNumber: String
 )
