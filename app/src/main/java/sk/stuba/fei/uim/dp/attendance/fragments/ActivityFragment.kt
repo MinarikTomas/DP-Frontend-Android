@@ -62,8 +62,11 @@ class ActivityFragment : Fragment(R.layout.fragment_activity) {
                 it?.let {
                     activityReceived = true
                     Log.d("ActivityFragment", it.name)
+                    // activity is running
                     if(it.startTime != "" && it.endTime == ""){
+                        handleNFC()
                         bnd.btnEnd.visibility = View.VISIBLE
+                    // activity has not started yet
                     }else if(it.startTime == ""){
                         bnd.btnStart.visibility = View.VISIBLE
                     }
@@ -162,6 +165,7 @@ class ActivityFragment : Fragment(R.layout.fragment_activity) {
     }
 
     override fun onDestroyView() {
+        NfcAdapter.getDefaultAdapter(requireContext()).disableReaderMode(requireActivity())
         binding = null
         super.onDestroyView()
     }
