@@ -47,12 +47,6 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             model = viewModel
             addActivityModel = addActivityViewModel
         }.also { bnd ->
-            bnd.title.apply {
-                setOnClickListener {
-                    PreferenceData.getInstance().clearData(requireContext())
-                    requireView().findNavController().navigate(R.id.action_home_login)
-                }
-            }
 
             val recyclerView = bnd.recyclerviewActivities
             recyclerView.layoutManager = LinearLayoutManager(context)
@@ -61,7 +55,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             recyclerView.addItemDecoration(
                 SpacesItemDecoration(20)
             )
-
+            Log.d("HomeFragment", PreferenceData.getInstance().getUser(requireContext()).toString())
             viewModel.getCreatedActivities(PreferenceData.getInstance().getUser(requireContext())?.id ?: -1)
 
             viewModel.getActivitiesResult.observe(viewLifecycleOwner) {

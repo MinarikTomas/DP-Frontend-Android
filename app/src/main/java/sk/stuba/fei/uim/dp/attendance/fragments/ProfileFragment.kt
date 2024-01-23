@@ -6,6 +6,7 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import sk.stuba.fei.uim.dp.attendance.R
@@ -58,6 +59,13 @@ class ProfileFragment : Fragment(R.layout.fragment_profile){
                     deletedCardPosition = position
                 }
             })
+
+            bnd.btnLogout.apply {
+                setOnClickListener {
+                    PreferenceData.getInstance().clearData(requireContext())
+                    it.findNavController().navigate(R.id.action_profile_login)
+                }
+            }
 
             viewModel.getCardsResult.observe(viewLifecycleOwner){
                 if (it.isNotEmpty()){

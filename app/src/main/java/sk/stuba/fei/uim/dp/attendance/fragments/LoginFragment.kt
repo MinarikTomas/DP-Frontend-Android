@@ -17,6 +17,7 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
 
     private var binding: FragmentLoginBinding ?= null
     private lateinit var viewModel: LoginViewModel
+    private var loginSent = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,6 +43,13 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                     it.findNavController().navigate(R.id.action_login_signup)
                 }
             }
+            
+            bnd.btnLogin.apply { 
+                setOnClickListener { 
+                    viewModel.loginUser()
+                    loginSent = true
+                }
+            }
 
             viewModel.loginResult.observe(viewLifecycleOwner){
                 if(it.isNotEmpty()){
@@ -50,18 +58,17 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                         it,
                         Snackbar.LENGTH_SHORT
                     ).show()
+                    loginSent=false
                 }
             }
 
             viewModel.userResult.observe(viewLifecycleOwner){
+                if(!loginSent)return@observe
                 it?.let { user ->
                     PreferenceData.getInstance().putUser(requireContext(), user)
+                    loginSent=false
                     requireView().findNavController().navigate(R.id.action_login_home)
                 } ?: PreferenceData.getInstance().putUser(requireContext(), null)
-            }
-
-            bnd.title.setOnClickListener {
-                it.findNavController().navigate(R.id.action_login_home)
             }
         }
     }
