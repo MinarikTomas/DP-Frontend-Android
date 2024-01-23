@@ -30,4 +30,9 @@
     <style name="activity_data">
         <item name="android:textSize">20sp</item>
     </style>
+    <style name="profile_textview">
+        <item name="android:textSize">20sp</item>
+        <item name="android:paddingTop">6dp</item>
+        <item name="android:paddingBottom">6dp</item>
+    </style>
 </resources>

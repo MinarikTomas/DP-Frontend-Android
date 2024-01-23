@@ -89,6 +89,7 @@ class ActivityFragment : Fragment(R.layout.fragment_activity) {
                         ).show()
                         return@setOnClickListener
                     }
+                    Log.d("ActivityFragment", "running - " + PreferenceData.getInstance().getIsActivityRunning(requireContext()))
                     if(!PreferenceData.getInstance().getIsActivityRunning(requireContext())){
                         viewModel.startActivity(arguments?.getInt("selected_activity_id")?: -1)
                     }else{
@@ -136,6 +137,7 @@ class ActivityFragment : Fragment(R.layout.fragment_activity) {
                 }else{
                     bnd.btnEnd.visibility = View.INVISIBLE
                     PreferenceData.getInstance().putIsActivityRunning(requireContext(), false)
+                    Log.d("ActivityFragment", "running set to false")
                     NfcAdapter.getDefaultAdapter(requireContext()).disableReaderMode(requireActivity())
                 }
             }

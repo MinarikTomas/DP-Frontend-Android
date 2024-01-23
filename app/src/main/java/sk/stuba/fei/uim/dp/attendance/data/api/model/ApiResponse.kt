@@ -25,3 +25,7 @@ data class ActivityWithParticipantsResponse(
     val startTime: String,
     val endTime: String
 )
+data class CardResponse(
+    val id: Int,
+    val name: String
+)

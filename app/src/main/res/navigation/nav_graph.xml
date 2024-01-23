@@ -79,8 +79,23 @@
         android:label="ActivityFragment">
     </fragment>
 
+    <fragment
+        android:id="@+id/fragment_profile"
+        android:name="sk.stuba.fei.uim.dp.attendance.fragments.ProfileFragment"
+        android:label="ProfileFragment">
+
+    </fragment>
+
     <action
         android:id="@+id/action_to_add_activity"
         app:destination="@+id/fragment_add_activity"/>
+
+    <action
+        android:id="@+id/action_to_home"
+        app:destination="@+id/fragment_home"/>
+
+    <action
+        android:id="@+id/action_to_profile"
+        app:destination="@+id/fragment_profile"/>
 
 </navigation>

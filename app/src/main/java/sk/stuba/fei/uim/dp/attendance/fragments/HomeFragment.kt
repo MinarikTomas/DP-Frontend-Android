@@ -80,6 +80,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                        val items = ArrayList<ActivityItem>()
                        it.forEachIndexed { index, activity ->
                            if(activity.startTime != "" && activity.endTime == ""){
+                               Log.d("HomeFragment", activity.endTime + activity.name)
                                PreferenceData.getInstance().putIsActivityRunning(requireContext(), true)
                            }
                            if(index == 0 || activity.date != it[index-1].date){

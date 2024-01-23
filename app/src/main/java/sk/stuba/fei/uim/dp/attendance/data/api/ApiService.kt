@@ -6,6 +6,7 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.PUT
@@ -18,6 +19,7 @@ import sk.stuba.fei.uim.dp.attendance.data.api.model.AuthResponse
 import sk.stuba.fei.uim.dp.attendance.data.api.model.ActivityResponse
 import sk.stuba.fei.uim.dp.attendance.data.api.model.ActivityWithParticipantsResponse
 import sk.stuba.fei.uim.dp.attendance.data.api.model.AddParticipantRequest
+import sk.stuba.fei.uim.dp.attendance.data.api.model.CardResponse
 import sk.stuba.fei.uim.dp.attendance.data.api.model.SignupRequest
 import sk.stuba.fei.uim.dp.attendance.data.api.model.UserResponse
 
@@ -46,6 +48,12 @@ interface ApiService {
 
     @POST("activity/{id}")
     suspend fun addParticipant(@Path("id") id: Int, @Body participantInfo: AddParticipantRequest): Response<UserResponse>
+
+    @GET("user/{id}/cards?type=active")
+    suspend fun getCards(@Path("id")id: Int): Response<List<CardResponse>>
+
+    @DELETE("card/{id}")
+    suspend fun deactivateCard(@Path("id")id: Int): Response<Void>
 
     companion object {
         fun create(context: Context): ApiService {

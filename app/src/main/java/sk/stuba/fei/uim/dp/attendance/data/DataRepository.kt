@@ -10,6 +10,7 @@ import sk.stuba.fei.uim.dp.attendance.data.api.model.CardRequest
 import sk.stuba.fei.uim.dp.attendance.data.api.model.LoginRequest
 import sk.stuba.fei.uim.dp.attendance.data.api.model.SignupRequest
 import sk.stuba.fei.uim.dp.attendance.data.model.Activity
+import sk.stuba.fei.uim.dp.attendance.data.model.Card
 import sk.stuba.fei.uim.dp.attendance.data.model.User
 import java.io.IOException
 
@@ -236,5 +237,43 @@ class DataRepository private constructor(
             ex.printStackTrace()
         }
         return Pair("Fatal error. Failed to add participant", null)
+    }
+
+    suspend fun apiGetCards(id: Int): Pair<String, List<Card>>{
+        try{
+            val response = service.getCards(id)
+            if (response.isSuccessful){
+                response.body()?.let {
+                    return Pair("",
+                        it.map {
+                            Card(it.id, it.name)
+                        })
+                }
+            }
+            return Pair("Failed to load cards", emptyList())
+        }catch (ex: IOException) {
+            ex.printStackTrace()
+            Log.d("API", ex.message.toString())
+            return Pair("Check internet connection. Failed to load cards", emptyList())
+        } catch (ex: Exception) {
+            ex.printStackTrace()
+        }
+        return Pair("Fatal error. Failed to load cards", emptyList())
+    }
+
+    suspend fun apiDeactivateCard(id: Int): String{
+        try {
+            val response = service.deactivateCard(id)
+            if (response.isSuccessful){
+                return ""
+            }
+            return "Failed to delete card"
+        }catch (ex: IOException) {
+            ex.printStackTrace()
+            return "Check internet connection. Failed to delete card"
+        } catch (ex: Exception) {
+            ex.printStackTrace()
+        }
+        return "Fatal error. Failed to delete card"
     }
 }

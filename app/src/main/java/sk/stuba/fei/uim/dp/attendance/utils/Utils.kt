@@ -3,6 +3,7 @@ package sk.stuba.fei.uim.dp.attendance.utils
 import androidx.recyclerview.widget.DiffUtil
 import sk.stuba.fei.uim.dp.attendance.adapters.ActivitiesAdapter
 import sk.stuba.fei.uim.dp.attendance.adapters.ActivityItem
+import sk.stuba.fei.uim.dp.attendance.adapters.CardItem
 import sk.stuba.fei.uim.dp.attendance.adapters.ParticipantItem
 
 class ActivityItemDiffCallback(
@@ -32,6 +33,21 @@ class ParticipantItemDiffCallback(
     override fun getNewListSize() = newList.size
     override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
         return oldList[oldItemPosition].name == newList[newItemPosition].name
+    }
+
+    override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+        return oldList[oldItemPosition] == newList[newItemPosition]
+    }
+}
+
+class CardItemDiffCallback(
+    private val oldList: List<CardItem>,
+    private val newList: List<CardItem>
+) : DiffUtil.Callback() {
+    override fun getOldListSize() = oldList.size
+    override fun getNewListSize() = newList.size
+    override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+        return oldList[oldItemPosition].id == newList[newItemPosition].id
     }
 
     override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
