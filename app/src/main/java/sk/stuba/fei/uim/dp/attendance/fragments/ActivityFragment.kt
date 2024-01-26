@@ -22,7 +22,6 @@ class ActivityFragment : Fragment(R.layout.fragment_activity) {
     private var binding: FragmentActivityBinding?= null
     private lateinit var viewModel: ActivityViewModel
     private  var activityReceived = false
-    private var id = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,7 +31,6 @@ class ActivityFragment : Fragment(R.layout.fragment_activity) {
             }
         })[ActivityViewModel::class.java]
     }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -40,7 +38,7 @@ class ActivityFragment : Fragment(R.layout.fragment_activity) {
             lifecycleOwner = viewLifecycleOwner
             model = viewModel
         }.also { bnd->
-            id = arguments?.getInt("selected_activity_id")?: -1
+            viewModel.clearBinds()
             viewModel.getActivity(arguments?.getInt("selected_activity_id")?: -1)
 
             val recyclerView = bnd.participantsRecyclerview
@@ -89,7 +87,6 @@ class ActivityFragment : Fragment(R.layout.fragment_activity) {
                         ).show()
                         return@setOnClickListener
                     }
-                    Log.d("ActivityFragment", "running - " + PreferenceData.getInstance().getIsActivityRunning(requireContext()))
                     if(!PreferenceData.getInstance().getIsActivityRunning(requireContext())){
                         viewModel.startActivity(arguments?.getInt("selected_activity_id")?: -1)
                     }else{
@@ -104,12 +101,13 @@ class ActivityFragment : Fragment(R.layout.fragment_activity) {
 
             bnd.btnEnd.apply {
                 setOnClickListener {
-                    viewModel.endActivity(arguments?.getInt("selected_activity_id")?: -1)
+                    viewModel.endActivity(
+                        arguments?.getInt("selected_activity_id")?: -1,
+                        PreferenceData.getInstance().getUser(requireContext())?.id ?: -1)
                 }
             }
 
             viewModel.startActivityResult.observe(viewLifecycleOwner){
-                Log.d("ActivityFragment", "start observe called")
                 if(!activityReceived) return@observe
                 if(it.isNotEmpty()){
                     Snackbar.make(
@@ -126,7 +124,6 @@ class ActivityFragment : Fragment(R.layout.fragment_activity) {
             }
 
             viewModel.endActivityResult.observe(viewLifecycleOwner){
-                Log.d("ActivityFragment", "end observe called")
                 if(!activityReceived) return@observe
                 if(it.isNotEmpty()){
                     Snackbar.make(
@@ -137,7 +134,6 @@ class ActivityFragment : Fragment(R.layout.fragment_activity) {
                 }else{
                     bnd.btnEnd.visibility = View.INVISIBLE
                     PreferenceData.getInstance().putIsActivityRunning(requireContext(), false)
-                    Log.d("ActivityFragment", "running set to false")
                     NfcAdapter.getDefaultAdapter(requireContext()).disableReaderMode(requireActivity())
                 }
             }
@@ -167,7 +163,7 @@ class ActivityFragment : Fragment(R.layout.fragment_activity) {
     }
 
     override fun onDestroyView() {
-        NfcAdapter.getDefaultAdapter(requireContext()).disableReaderMode(requireActivity())
+        NfcAdapter.getDefaultAdapter(requireContext())?.disableReaderMode(requireActivity())
         binding = null
         super.onDestroyView()
     }

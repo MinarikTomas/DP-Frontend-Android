@@ -1,7 +1,6 @@
 package sk.stuba.fei.uim.dp.attendance.fragments
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
@@ -15,23 +14,23 @@ import sk.stuba.fei.uim.dp.attendance.R
 import sk.stuba.fei.uim.dp.attendance.data.DataRepository
 import sk.stuba.fei.uim.dp.attendance.data.PreferenceData
 import sk.stuba.fei.uim.dp.attendance.databinding.FragmentAddActivityBinding
-import sk.stuba.fei.uim.dp.attendance.viewmodels.AddActivityViewModel
+import sk.stuba.fei.uim.dp.attendance.viewmodels.ActivityViewModel
 import java.text.SimpleDateFormat
 import java.util.Locale
 
 class AddActivityFragment : Fragment(R.layout.fragment_add_activity) {
 
     private var binding: FragmentAddActivityBinding ?= null
-    private lateinit var viewModel: AddActivityViewModel
+    private lateinit var viewModel: ActivityViewModel
     private var activityAdded = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProvider(requireActivity(), object: ViewModelProvider.Factory{
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return AddActivityViewModel(DataRepository.getInstance(requireContext())) as T
+                return ActivityViewModel(DataRepository.getInstance(requireContext())) as T
             }
-        })[AddActivityViewModel::class.java]
+        })[ActivityViewModel::class.java]
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -41,6 +40,7 @@ class AddActivityFragment : Fragment(R.layout.fragment_add_activity) {
             lifecycleOwner = viewLifecycleOwner
             model = viewModel
         }.also { bnd ->
+            viewModel.clearBinds()
             val datePicker = MaterialDatePicker
                 .Builder
                 .datePicker()
@@ -105,7 +105,7 @@ class AddActivityFragment : Fragment(R.layout.fragment_add_activity) {
                     activityAdded = false
                 }else{
                     activityAdded = true
-                    viewModel.clear()
+                    viewModel.clearBinds()
                     requireView().findNavController().navigate(R.id.action_add_activity_home)
                 }
             }

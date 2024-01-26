@@ -8,6 +8,7 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import sk.stuba.fei.uim.dp.attendance.R
+import sk.stuba.fei.uim.dp.attendance.data.PreferenceData
 import sk.stuba.fei.uim.dp.attendance.data.model.Activity
 import sk.stuba.fei.uim.dp.attendance.fragments.HomeFragmentDirections
 import sk.stuba.fei.uim.dp.attendance.utils.ActivityItemDiffCallback
@@ -76,7 +77,19 @@ class ActivitiesAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         return items[position].theView
     }
 
-    fun updateItems(newItems: List<ActivityItem>) {
+    fun updateItems(activities: List<Activity>) {
+        val newItems = ArrayList<ActivityItem>()
+        activities.forEachIndexed { index, activity ->
+            if(index == 0 || activity.date != activities[index-1].date){
+                newItems.add(ActivityItem(
+                    ActivitiesAdapter.THE_DATE_VIEW,
+                    activity))
+            }
+            newItems.add(ActivityItem(
+                ActivitiesAdapter.THE_ACTIVITY_VIEW,
+                activity
+            ))
+        }
         val diffCallback = ActivityItemDiffCallback(items, newItems)
         val diffResult = DiffUtil.calculateDiff(diffCallback)
 

@@ -6,10 +6,7 @@
     <data>
         <variable
             name="model"
-            type="sk.stuba.fei.uim.dp.attendance.viewmodels.HomeViewModel" />
-        <variable
-            name="add_activity_model"
-            type="sk.stuba.fei.uim.dp.attendance.viewmodels.AddActivityViewModel" />
+            type="sk.stuba.fei.uim.dp.attendance.viewmodels.ActivityViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -51,10 +48,10 @@
         <RadioGroup
             android:id="@+id/toggle"
             android:layout_width="wrap_content"
-            android:layout_height="35dp"
+            android:layout_height="40dp"
             android:background="@drawable/switch_bg"
             android:orientation="horizontal"
-            android:padding="3dp"
+            android:padding="5dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/title">

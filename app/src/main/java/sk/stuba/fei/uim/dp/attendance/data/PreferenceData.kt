@@ -50,6 +50,20 @@ class PreferenceData private constructor() {
         return isRunning
     }
 
+    fun putIsUpcomingSelected(context: Context?, isUpcomingSelected: Boolean) {
+        val sharedPref = getSharedPreferences(context) ?: return
+        val editor = sharedPref.edit()
+        editor.putBoolean(upcomingKey, isUpcomingSelected)
+
+        editor.apply()
+    }
+
+    fun getIsUpcomingSelected(context: Context?): Boolean {
+        val sharedPref = getSharedPreferences(context) ?: return false
+        val isSelected = sharedPref.getBoolean(upcomingKey, true)
+        return isSelected
+    }
+
     companion object {
         @Volatile
         private var INSTANCE: PreferenceData? = null
@@ -65,5 +79,6 @@ class PreferenceData private constructor() {
         private const val shpKey = AppConfig.SHARED_PREFERENCES_KEY
         private const val userKey = "userKey"
         private const val runningKey = "runningKey"
+        private const val upcomingKey = "upcomingKey"
     }
 }

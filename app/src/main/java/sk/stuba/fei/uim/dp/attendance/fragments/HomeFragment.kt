@@ -6,38 +6,32 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import sk.stuba.fei.uim.dp.attendance.R
 import sk.stuba.fei.uim.dp.attendance.adapters.ActivitiesAdapter
-import sk.stuba.fei.uim.dp.attendance.adapters.ActivityItem
 import sk.stuba.fei.uim.dp.attendance.data.DataRepository
 import sk.stuba.fei.uim.dp.attendance.data.PreferenceData
+import sk.stuba.fei.uim.dp.attendance.data.model.Activity
 import sk.stuba.fei.uim.dp.attendance.databinding.FragmentHomeBinding
 import sk.stuba.fei.uim.dp.attendance.utils.SpacesItemDecoration
-import sk.stuba.fei.uim.dp.attendance.viewmodels.AddActivityViewModel
-import sk.stuba.fei.uim.dp.attendance.viewmodels.HomeViewModel
+import sk.stuba.fei.uim.dp.attendance.viewmodels.ActivityViewModel
 
 class HomeFragment : Fragment(R.layout.fragment_home) {
 
     private var binding: FragmentHomeBinding ?= null
-    private lateinit var viewModel: HomeViewModel
-    private lateinit var addActivityViewModel: AddActivityViewModel
+    private lateinit var viewModel: ActivityViewModel
+    private var activities = emptyList<Activity>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProvider(requireActivity(), object: ViewModelProvider.Factory{
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return HomeViewModel(DataRepository.getInstance(requireContext())) as T
+                return ActivityViewModel(DataRepository.getInstance(requireContext())) as T
             }
-        })[HomeViewModel::class.java]
+        })[ActivityViewModel::class.java]
 
-        addActivityViewModel = ViewModelProvider(requireActivity(), object: ViewModelProvider.Factory{
-            override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return AddActivityViewModel(DataRepository.getInstance(requireContext())) as T
-            }
-        })[AddActivityViewModel::class.java]
+        viewModel.getCreatedActivities(PreferenceData.getInstance().getUser(requireContext())?.id ?: -1)
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -45,7 +39,6 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         binding = FragmentHomeBinding.bind(view).apply {
             lifecycleOwner = viewLifecycleOwner
             model = viewModel
-            addActivityModel = addActivityViewModel
         }.also { bnd ->
 
             val recyclerView = bnd.recyclerviewActivities
@@ -55,8 +48,9 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             recyclerView.addItemDecoration(
                 SpacesItemDecoration(20)
             )
-            Log.d("HomeFragment", PreferenceData.getInstance().getUser(requireContext()).toString())
-            viewModel.getCreatedActivities(PreferenceData.getInstance().getUser(requireContext())?.id ?: -1)
+
+            bnd.upcoming.isChecked = PreferenceData.getInstance().getIsUpcomingSelected(requireContext())
+            bnd.past.isChecked = !PreferenceData.getInstance().getIsUpcomingSelected(requireContext())
 
             viewModel.getActivitiesResult.observe(viewLifecycleOwner) {
                 if (it.isNotEmpty()) {
@@ -71,31 +65,28 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             viewModel.activities.observe(viewLifecycleOwner){
                 it?.let {
                     if(it.isNotEmpty()){
-                       val items = ArrayList<ActivityItem>()
-                       it.forEachIndexed { index, activity ->
-                           if(activity.startTime != "" && activity.endTime == ""){
-                               Log.d("HomeFragment", activity.endTime + activity.name)
-                               PreferenceData.getInstance().putIsActivityRunning(requireContext(), true)
-                           }
-                           if(index == 0 || activity.date != it[index-1].date){
-                               items.add(ActivityItem(
-                                   ActivitiesAdapter.THE_DATE_VIEW,
-                                   activity))
-                           }
-                           items.add(ActivityItem(
-                               ActivitiesAdapter.THE_ACTIVITY_VIEW,
-                               activity
-                           ))
-                       }
-                       activitiesAdapter.updateItems(items)
+                        activities = it
+                        if(it.filter { it.startTime.isNotEmpty() && it.endTime.isEmpty() }.isNotEmpty()){
+                            PreferenceData.getInstance().putIsActivityRunning(requireContext(), true)
+                        }
+                        val filteredActivities = if(bnd.upcoming.isChecked){
+                            it.filter { it.endTime.isEmpty() }
+                        }else{
+                            it.filter { it.endTime.isNotEmpty() }
+                        }
+                        activitiesAdapter.updateItems(filteredActivities)
                     }
                 }
             }
 
-            addActivityViewModel.addActivityResult.observe(viewLifecycleOwner){
-                if(it.isEmpty()){
-                    Log.d("HomeFragment", "activty created")
+            bnd.upcoming.setOnCheckedChangeListener { _, isChecked ->
+                PreferenceData.getInstance().putIsUpcomingSelected(requireContext(),isChecked)
+                val filteredActivities = if(isChecked){
+                    activities.filter { it.endTime.isEmpty() }
+                }else{
+                    activities.filter { it.endTime.isNotEmpty() }
                 }
+                activitiesAdapter.updateItems(filteredActivities)
             }
         }
     }
