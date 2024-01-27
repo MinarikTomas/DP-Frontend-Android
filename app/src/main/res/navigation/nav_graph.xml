@@ -47,14 +47,14 @@
 
         <action
             android:id="@+id/action_signup_to_add_card"
-            app:destination="@+id/fragment_add_card"/>
+            app:destination="@+id/fragment_add_card_signup"/>
 
     </fragment>
 
     <fragment
-        android:id="@+id/fragment_add_card"
-        android:name="sk.stuba.fei.uim.dp.attendance.fragments.AddCardFragment"
-        android:label="AddCardFragment">
+        android:id="@+id/fragment_add_card_signup"
+        android:name="sk.stuba.fei.uim.dp.attendance.fragments.AddCardSignupFragment"
+        android:label="AddCardSignupFragment">
 
         <action
             android:id="@+id/action_add_card_to_login"
@@ -87,7 +87,20 @@
         <action
             android:id="@+id/action_profile_login"
             app:destination="@+id/fragment_login"/>
+        <action
+            android:id="@+id/action_profile_add_card"
+            app:destination="@+id/fragment_add_card"/>
 
+    </fragment>
+
+    <fragment
+        android:id="@+id/fragment_add_card"
+        android:name="sk.stuba.fei.uim.dp.attendance.fragments.AddCardFragment"
+        android:label="AddCardFragment">
+
+        <action
+            android:id="@+id/action_add_card_profile"
+            app:destination="@+id/fragment_profile"/>
     </fragment>
 
     <action

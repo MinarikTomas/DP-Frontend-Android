@@ -18,8 +18,12 @@ class ProfileViewModel(private val dataRepository: DataRepository): ViewModel() 
     private val _deactivateResult = MutableLiveData<String>()
     val deactivateResult: LiveData<String> get() = _deactivateResult
 
+    private val _addCardResult = MutableLiveData<String>()
+    val addCardResult: LiveData<String> get() = _addCardResult
+
     val fullName = MutableLiveData<String>()
     val email = MutableLiveData<String>()
+    val cardName = MutableLiveData<String>()
 
     fun getCards(uid: Int){
         viewModelScope.launch {
@@ -33,6 +37,18 @@ class ProfileViewModel(private val dataRepository: DataRepository): ViewModel() 
         viewModelScope.launch {
             val result = dataRepository.apiDeactivateCard(id)
             _deactivateResult.postValue(result)
+        }
+    }
+
+    fun addCard(id: Int, serialNumber: String){
+        viewModelScope.launch {
+            val resultAdd = dataRepository.apiAddCard(
+                id,
+                cardName.value ?: "",
+                serialNumber)
+            _addCardResult.postValue(resultAdd)
+            val resultGet = dataRepository.apiGetCards(id)
+            _cards.postValue(resultGet.second)
         }
     }
 }

@@ -19,6 +19,7 @@ import sk.stuba.fei.uim.dp.attendance.data.api.model.AuthResponse
 import sk.stuba.fei.uim.dp.attendance.data.api.model.ActivityResponse
 import sk.stuba.fei.uim.dp.attendance.data.api.model.ActivityWithParticipantsResponse
 import sk.stuba.fei.uim.dp.attendance.data.api.model.AddParticipantRequest
+import sk.stuba.fei.uim.dp.attendance.data.api.model.CardRequest
 import sk.stuba.fei.uim.dp.attendance.data.api.model.CardResponse
 import sk.stuba.fei.uim.dp.attendance.data.api.model.SignupRequest
 import sk.stuba.fei.uim.dp.attendance.data.api.model.UserResponse
@@ -54,6 +55,9 @@ interface ApiService {
 
     @DELETE("card/{id}")
     suspend fun deactivateCard(@Path("id")id: Int): Response<Void>
+
+    @POST("user/{id}/cards")
+    suspend fun addCard(@Path("id")id: Int, @Body cardInfo: CardRequest): Response<Void>
 
     companion object {
         fun create(context: Context): ApiService {

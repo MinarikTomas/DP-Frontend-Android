@@ -11,70 +11,89 @@ import androidx.navigation.findNavController
 import com.google.android.material.snackbar.Snackbar
 import sk.stuba.fei.uim.dp.attendance.R
 import sk.stuba.fei.uim.dp.attendance.data.DataRepository
+import sk.stuba.fei.uim.dp.attendance.data.PreferenceData
 import sk.stuba.fei.uim.dp.attendance.databinding.FragmentAddCardBinding
-import sk.stuba.fei.uim.dp.attendance.viewmodels.SignupViewModel
+import sk.stuba.fei.uim.dp.attendance.databinding.FragmentProfileBinding
+import sk.stuba.fei.uim.dp.attendance.viewmodels.ProfileViewModel
 
 class AddCardFragment : Fragment(R.layout.fragment_add_card) {
 
     private var binding: FragmentAddCardBinding ?= null
-    private lateinit var viewModel: SignupViewModel
+    private lateinit var viewModel: ProfileViewModel
+    private lateinit var serialNumber: String
+    private var cardAdded = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProvider(requireActivity(), object: ViewModelProvider.Factory{
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return SignupViewModel(DataRepository.getInstance(requireContext())) as T
+                return ProfileViewModel(DataRepository.getInstance(requireContext())) as T
             }
-        })[SignupViewModel::class.java]
+        })[ProfileViewModel::class.java]
     }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         binding = FragmentAddCardBinding.bind(view).apply {
             lifecycleOwner = viewLifecycleOwner
             model = viewModel
-        }.also {bnd ->
+        }.also { bnd ->
+            bnd.btnScan.apply {
+                setOnClickListener {
+                    val nfcAdapter = NfcAdapter.getDefaultAdapter(requireContext())
 
-           bnd.btnScan.apply {
-               setOnClickListener {
-                   val nfcAdapter = NfcAdapter.getDefaultAdapter(requireContext())
+                    nfcAdapter?.enableReaderMode(
+                        requireActivity(),
+                        { tag ->
+                            serialNumber = tag.id.toHex()
+                            Log.d("AddCardFragment", tag.id.toHex())
+                            nfcAdapter.disableReaderMode(requireActivity())
+                        },
+                        NfcAdapter.FLAG_READER_NFC_A or
+                                NfcAdapter.FLAG_READER_NFC_B or
+                                NfcAdapter.FLAG_READER_NFC_F or
+                                NfcAdapter.FLAG_READER_NFC_V,
+                        null
+                    )
+                }
+            }
 
-                   nfcAdapter?.enableReaderMode(
-                       requireActivity(),
-                       NfcAdapter.ReaderCallback { tag ->
-                           Log.d("NfcActivity", "tag discovered")
-                           Log.d("NfcActivity", tag.id.toHex())
-                           viewModel.signupUser(tag.id.toHex())
-                       },
-                       NfcAdapter.FLAG_READER_NFC_A or
-                               NfcAdapter.FLAG_READER_NFC_B or
-                               NfcAdapter.FLAG_READER_NFC_F or
-                               NfcAdapter.FLAG_READER_NFC_V,
-                       null
-                   )
-               }
-           }
+            bnd.btnSaveCard.apply {
+                setOnClickListener {
+                    viewModel.addCard(
+                        PreferenceData.getInstance().getUser(requireContext())?.id ?: -1,
+                        serialNumber
+                    )
+                }
+            }
 
-            viewModel.signupResult.observe(viewLifecycleOwner){
+            viewModel.addCardResult.observe(viewLifecycleOwner){
+                if(!cardAdded) return@observe
                 if(it.isNotEmpty()){
                     Snackbar.make(
                         view.findViewById(R.id.btn_scan),
                         it,
                         Snackbar.LENGTH_SHORT
                     ).show()
+                    cardAdded = false
                 }else{
-                    NfcAdapter.getDefaultAdapter(requireContext()).disableReaderMode(requireActivity())
-                    Snackbar.make(
-                        view.findViewById(R.id.btn_scan),
-                        "Successfully signed up",
-                        Snackbar.LENGTH_SHORT
-                    ).show()
-                    requireView().findNavController().navigate(R.id.action_add_card_to_login)
+                    cardAdded = true
+                    viewModel.cardName.value = ""
+                    requireView().findNavController().navigate(R.id.action_add_card_profile)
                 }
             }
         }
     }
 
-    fun ByteArray.toHex(): String = joinToString(separator = "") { eachByte -> "%02x".format(eachByte) }
+    override fun onPause() {
+        super.onPause()
+        cardAdded = false
+    }
 
+    override fun onDestroyView() {
+        binding = null
+        super.onDestroyView()
+    }
+    fun ByteArray.toHex(): String = joinToString(separator = "") { eachByte -> "%02x".format(eachByte) }
 }

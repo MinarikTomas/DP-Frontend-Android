@@ -276,4 +276,20 @@ class DataRepository private constructor(
         }
         return "Fatal error. Failed to delete card"
     }
+
+    suspend fun apiAddCard(id: Int, name: String, serialNumber: String): String{
+        try {
+            val response = service.addCard(id, CardRequest(name, serialNumber))
+            if(response.isSuccessful){
+                return ""
+            }
+            return "Failed to add card"
+        }catch (ex: IOException) {
+            ex.printStackTrace()
+            return "Check internet connection. Failed to add card"
+        } catch (ex: Exception) {
+            ex.printStackTrace()
+        }
+        return "Fatal error. Failed to add card"
+    }
 }

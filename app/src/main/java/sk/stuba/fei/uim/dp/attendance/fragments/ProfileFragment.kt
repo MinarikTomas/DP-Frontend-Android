@@ -67,6 +67,12 @@ class ProfileFragment : Fragment(R.layout.fragment_profile){
                 }
             }
 
+            bnd.addCard.apply {
+                setOnClickListener {
+                    it.findNavController().navigate(R.id.action_profile_add_card)
+                }
+            }
+
             viewModel.getCardsResult.observe(viewLifecycleOwner){
                 if (it.isNotEmpty()){
                     Snackbar.make(
@@ -97,5 +103,10 @@ class ProfileFragment : Fragment(R.layout.fragment_profile){
                 }
             }
         }
+    }
+
+    override fun onDestroyView() {
+        binding = null
+        super.onDestroyView()
     }
 }
