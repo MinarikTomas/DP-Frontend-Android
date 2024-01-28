@@ -23,6 +23,8 @@ class ProfileFragment : Fragment(R.layout.fragment_profile){
     private var binding: FragmentProfileBinding?= null
     private lateinit var viewModel: ProfileViewModel
     private var deletedCardPosition = -1
+    private var updatedCardPosition = -1
+    private lateinit var updatedCard: CardItem
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,6 +34,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile){
             }
         })[ProfileViewModel::class.java]
         val user = PreferenceData.getInstance().getUser(requireContext())
+        viewModel.getCards(user?.id ?: -1)
         viewModel.fullName.value = user?.name
         viewModel.email.value = user?.email
     }
@@ -52,11 +55,17 @@ class ProfileFragment : Fragment(R.layout.fragment_profile){
             recyclerView.addItemDecoration(
                 SpacesItemDecoration(10)
             )
-            cardsAdapter.setOnClickListener(object: CardsAdapter.OnClickListener{
+            cardsAdapter.setOnClickDeleteListener(object: CardsAdapter.OnClickListener{
                 override fun onClick(position: Int, model: CardItem) {
-                    Log.d("profileFragment", position.toString())
                     viewModel.deactivateCard(model.id)
                     deletedCardPosition = position
+                }
+            })
+            cardsAdapter.setOnClickEditSaveListener(object: CardsAdapter.OnClickListener{
+                override fun onClick(position: Int, model: CardItem) {
+                    viewModel.updateCard(model.id, model.name)
+                    updatedCard = model
+                    updatedCardPosition = position
                 }
             })
 
@@ -96,8 +105,16 @@ class ProfileFragment : Fragment(R.layout.fragment_profile){
                         it,
                         Snackbar.LENGTH_SHORT
                     ).show()
-                }else{
-                    cardsAdapter.deleteItem(deletedCardPosition)
+                }
+            }
+
+            viewModel.updateCardResult.observe(viewLifecycleOwner){
+                if(it.isNotEmpty()){
+                    Snackbar.make(
+                        view.findViewById(R.id.btn_logout),
+                        it,
+                        Snackbar.LENGTH_SHORT
+                    ).show()
                 }
             }
 

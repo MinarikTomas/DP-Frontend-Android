@@ -18,3 +18,6 @@ data class AddActivityRequest(
 data class AddParticipantRequest(
     val serialNumber: String
 )
+data class NameRequest(
+    val name: String
+)

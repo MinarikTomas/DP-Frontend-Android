@@ -21,6 +21,7 @@ import sk.stuba.fei.uim.dp.attendance.data.api.model.ActivityWithParticipantsRes
 import sk.stuba.fei.uim.dp.attendance.data.api.model.AddParticipantRequest
 import sk.stuba.fei.uim.dp.attendance.data.api.model.CardRequest
 import sk.stuba.fei.uim.dp.attendance.data.api.model.CardResponse
+import sk.stuba.fei.uim.dp.attendance.data.api.model.NameRequest
 import sk.stuba.fei.uim.dp.attendance.data.api.model.SignupRequest
 import sk.stuba.fei.uim.dp.attendance.data.api.model.UserResponse
 
@@ -61,6 +62,9 @@ interface ApiService {
 
     @GET("user/{id}/activities?type=attended")
     suspend fun getAttendedActivities(@Path("id")id: Int): Response<List<ActivityResponse>>
+
+    @PUT("card/{id}")
+    suspend fun updateCard(@Path("id")id: Int, @Body request: NameRequest): Response<Void>
 
     companion object {
         fun create(context: Context): ApiService {

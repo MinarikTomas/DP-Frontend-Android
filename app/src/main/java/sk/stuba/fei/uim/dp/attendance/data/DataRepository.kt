@@ -8,6 +8,7 @@ import sk.stuba.fei.uim.dp.attendance.data.api.model.AddActivityRequest
 import sk.stuba.fei.uim.dp.attendance.data.api.model.AddParticipantRequest
 import sk.stuba.fei.uim.dp.attendance.data.api.model.CardRequest
 import sk.stuba.fei.uim.dp.attendance.data.api.model.LoginRequest
+import sk.stuba.fei.uim.dp.attendance.data.api.model.NameRequest
 import sk.stuba.fei.uim.dp.attendance.data.api.model.SignupRequest
 import sk.stuba.fei.uim.dp.attendance.data.model.Activity
 import sk.stuba.fei.uim.dp.attendance.data.model.Card
@@ -324,5 +325,21 @@ class DataRepository private constructor(
             ex.printStackTrace()
         }
         return Pair("Fatal error. Failed to load activities", emptyList())
+    }
+
+    suspend fun apiUpdateCard(id: Int, name: String): String {
+        try {
+            val response = service.updateCard(id, NameRequest(name))
+            if(response.isSuccessful){
+                return ""
+            }
+            return "Failed to update card"
+        }catch (ex: IOException) {
+            ex.printStackTrace()
+            return "Check internet connection. Failed to update card"
+        } catch (ex: Exception) {
+            ex.printStackTrace()
+        }
+        return "Fatal error. Failed to update card"
     }
 }
