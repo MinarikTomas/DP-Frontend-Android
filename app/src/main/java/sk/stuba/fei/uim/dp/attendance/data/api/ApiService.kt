@@ -59,6 +59,9 @@ interface ApiService {
     @POST("user/{id}/cards")
     suspend fun addCard(@Path("id")id: Int, @Body cardInfo: CardRequest): Response<Void>
 
+    @GET("user/{id}/activities?type=attended")
+    suspend fun getAttendedActivities(@Path("id")id: Int): Response<List<ActivityResponse>>
+
     companion object {
         fun create(context: Context): ApiService {
             val client = OkHttpClient.Builder()

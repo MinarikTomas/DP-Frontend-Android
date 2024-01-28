@@ -292,4 +292,37 @@ class DataRepository private constructor(
         }
         return "Fatal error. Failed to add card"
     }
+
+    suspend fun apiGetAttendedActivities(uid: Int): Pair<String, List<Activity>>
+    {
+        try{
+            val response = service.getAttendedActivities(uid)
+            if (response.isSuccessful){
+                response.body()?.let {
+                    val activities = it.map{
+                        Activity(
+                            it.id,
+                            it.name,
+                            it.location,
+                            it.time.split(" ")[0],
+                            it.time.split(" ")[1],
+                            it.createdBy,
+                            null,
+                            it.startTime,
+                            it.endTime
+                        )
+                    }
+                    return Pair("", activities)
+                }
+            }
+            return Pair("Failed to load activities", emptyList())
+        }catch (ex: IOException) {
+            ex.printStackTrace()
+            Log.d("API", ex.message.toString())
+            return Pair("Check internet connection. Failed to load activities", emptyList())
+        } catch (ex: Exception) {
+            ex.printStackTrace()
+        }
+        return Pair("Fatal error. Failed to load activities", emptyList())
+    }
 }

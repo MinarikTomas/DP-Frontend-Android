@@ -90,4 +90,8 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             }
         }
     }
+    override fun onDestroyView() {
+        binding = null
+        super.onDestroyView()
+    }
 }
