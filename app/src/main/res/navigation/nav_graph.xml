@@ -77,6 +77,10 @@
         android:id="@+id/fragment_activity"
         android:name="sk.stuba.fei.uim.dp.attendance.fragments.ActivityFragment"
         android:label="ActivityFragment">
+
+        <action
+            android:id="@+id/action_activity_home"
+            app:destination="@+id/fragment_home"/>
     </fragment>
 
     <fragment

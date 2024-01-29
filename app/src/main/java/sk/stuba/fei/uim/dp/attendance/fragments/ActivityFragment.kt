@@ -7,6 +7,7 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import sk.stuba.fei.uim.dp.attendance.R
@@ -107,6 +108,15 @@ class ActivityFragment : Fragment(R.layout.fragment_activity) {
                 }
             }
 
+            bnd.delete.apply {
+                setOnClickListener {
+                    viewModel.deleteActivity(
+                        arguments?.getInt("selected_activity_id")?: -1,
+                        PreferenceData.getInstance().getUser(requireContext())?.id ?: -1
+                    )
+                }
+            }
+
             viewModel.startActivityResult.observe(viewLifecycleOwner){
                 if(!activityReceived) return@observe
                 if(it.isNotEmpty()){
@@ -153,6 +163,20 @@ class ActivityFragment : Fragment(R.layout.fragment_activity) {
                     participantsAdapter.addItem(ParticipantItem(it.name ?: ""))
                 }
             }
+
+            viewModel.deleteActivityResult.observe(viewLifecycleOwner){
+                it.getContentIfNotHandled()?.let {
+                    if (it.isNotEmpty()){
+                        Snackbar.make(
+                            view.findViewById(R.id.title),
+                            it,
+                            Snackbar.LENGTH_SHORT
+                        ).show()
+                    }else{
+                        requireView().findNavController().navigate(R.id.action_activity_home)
+                    }
+                }
+            }
         }
     }
 
@@ -176,6 +200,7 @@ class ActivityFragment : Fragment(R.layout.fragment_activity) {
                 "NFC not available",
                 Snackbar.LENGTH_SHORT
             ).show()
+            return
         }
 
         nfcAdapter.enableReaderMode(

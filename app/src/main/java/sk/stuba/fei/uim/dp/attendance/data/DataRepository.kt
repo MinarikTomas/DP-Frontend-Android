@@ -342,4 +342,20 @@ class DataRepository private constructor(
         }
         return "Fatal error. Failed to update card"
     }
+
+    suspend fun apiDeleteCard(id: Int): String{
+        try {
+            val response = service.deleteActivity(id)
+            if(response.isSuccessful){
+                return ""
+            }
+            return "Failed to delete activity"
+        }catch (ex: IOException) {
+            ex.printStackTrace()
+            return "Check internet connection. Failed to delete"
+        } catch (ex: Exception) {
+            ex.printStackTrace()
+        }
+        return "Fatal error. Failed to delete activity"
+    }
 }

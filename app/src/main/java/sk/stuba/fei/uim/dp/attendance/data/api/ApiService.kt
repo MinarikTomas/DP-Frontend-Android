@@ -66,6 +66,9 @@ interface ApiService {
     @PUT("card/{id}")
     suspend fun updateCard(@Path("id")id: Int, @Body request: NameRequest): Response<Void>
 
+    @DELETE("activity/{id}")
+    suspend fun deleteActivity(@Path("id")id: Int): Response<Void>
+
     companion object {
         fun create(context: Context): ApiService {
             val client = OkHttpClient.Builder()

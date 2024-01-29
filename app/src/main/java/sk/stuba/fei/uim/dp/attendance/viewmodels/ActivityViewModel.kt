@@ -8,6 +8,7 @@ import kotlinx.coroutines.launch
 import sk.stuba.fei.uim.dp.attendance.data.DataRepository
 import sk.stuba.fei.uim.dp.attendance.data.model.Activity
 import sk.stuba.fei.uim.dp.attendance.data.model.User
+import sk.stuba.fei.uim.dp.attendance.utils.Event
 
 class ActivityViewModel(private val dataRepository: DataRepository): ViewModel() {
     private val _getActivityResult = MutableLiveData<String>()
@@ -35,6 +36,9 @@ class ActivityViewModel(private val dataRepository: DataRepository): ViewModel()
 
     private val _addActivityResult = MutableLiveData<String>()
     val addActivityResult: LiveData<String> get() = _addActivityResult
+
+    private val _deleteActivityResult = MutableLiveData<Event<String>>()
+    val deleteActivityResult: LiveData<Event<String>> get() = _deleteActivityResult
 
 
     val name = MutableLiveData<String>()
@@ -108,6 +112,15 @@ class ActivityViewModel(private val dataRepository: DataRepository): ViewModel()
                 }
             )
             _addActivityResult.postValue(addResult)
+            val getResult = dataRepository.apiGetCreatedActivities(uid)
+            _activities.postValue(getResult.second)
+        }
+    }
+
+    fun deleteActivity(id: Int, uid: Int){
+        viewModelScope.launch {
+            val result = dataRepository.apiDeleteCard(id)
+            _deleteActivityResult.postValue(Event(result))
             val getResult = dataRepository.apiGetCreatedActivities(uid)
             _activities.postValue(getResult.second)
         }
