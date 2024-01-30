@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import sk.stuba.fei.uim.dp.attendance.R
@@ -15,6 +16,8 @@ import sk.stuba.fei.uim.dp.attendance.adapters.ParticipantItem
 import sk.stuba.fei.uim.dp.attendance.adapters.ParticipantsAdapter
 import sk.stuba.fei.uim.dp.attendance.data.DataRepository
 import sk.stuba.fei.uim.dp.attendance.data.PreferenceData
+import sk.stuba.fei.uim.dp.attendance.data.model.Activity
+import sk.stuba.fei.uim.dp.attendance.data.model.ParcelableActivity
 import sk.stuba.fei.uim.dp.attendance.databinding.FragmentActivityBinding
 import sk.stuba.fei.uim.dp.attendance.viewmodels.ActivityViewModel
 
@@ -22,7 +25,10 @@ class ActivityFragment : Fragment(R.layout.fragment_activity) {
 
     private var binding: FragmentActivityBinding?= null
     private lateinit var viewModel: ActivityViewModel
+
+    private val args: ActivityFragmentArgs by navArgs()
     private  var activityReceived = false
+    private var activity: Activity? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,7 +46,7 @@ class ActivityFragment : Fragment(R.layout.fragment_activity) {
             model = viewModel
         }.also { bnd->
             viewModel.clearBinds()
-            viewModel.getActivity(arguments?.getInt("selected_activity_id")?: -1)
+            viewModel.getActivity(args.activityId)
 
             val recyclerView = bnd.participantsRecyclerview
             recyclerView.layoutManager = LinearLayoutManager(context)
@@ -57,15 +63,16 @@ class ActivityFragment : Fragment(R.layout.fragment_activity) {
                 }
             }
 
-            viewModel.activityResult.observe(viewLifecycleOwner){
-                it?.let {
+            viewModel.activityResult.observe(viewLifecycleOwner){ it ->
+                it.getContentIfNotHandled()?.let {
+                    activity = it
                     activityReceived = true
                     Log.d("ActivityFragment", it.name)
                     // activity is running
                     if(it.startTime != "" && it.endTime == ""){
                         handleNFC()
                         bnd.btnEnd.visibility = View.VISIBLE
-                    // activity has not started yet
+                        // activity has not started yet
                     }else if(it.startTime == ""){
                         bnd.btnStart.visibility = View.VISIBLE
                     }
@@ -89,7 +96,7 @@ class ActivityFragment : Fragment(R.layout.fragment_activity) {
                         return@setOnClickListener
                     }
                     if(!PreferenceData.getInstance().getIsActivityRunning(requireContext())){
-                        viewModel.startActivity(arguments?.getInt("selected_activity_id")?: -1)
+                        viewModel.startActivity(args.activityId)
                     }else{
                         Snackbar.make(
                             view.findViewById(R.id.title),
@@ -103,7 +110,7 @@ class ActivityFragment : Fragment(R.layout.fragment_activity) {
             bnd.btnEnd.apply {
                 setOnClickListener {
                     viewModel.endActivity(
-                        arguments?.getInt("selected_activity_id")?: -1,
+                        args.activityId,
                         PreferenceData.getInstance().getUser(requireContext())?.id ?: -1)
                 }
             }
@@ -111,9 +118,23 @@ class ActivityFragment : Fragment(R.layout.fragment_activity) {
             bnd.delete.apply {
                 setOnClickListener {
                     viewModel.deleteActivity(
-                        arguments?.getInt("selected_activity_id")?: -1,
+                        args.activityId,
                         PreferenceData.getInstance().getUser(requireContext())?.id ?: -1
                     )
+                }
+            }
+
+            bnd.edit.setOnClickListener {
+                activity?.let {
+                    requireView().findNavController().navigate(ActivityFragmentDirections.actionActivityToEdit(
+                        ParcelableActivity(
+                            it.id,
+                            it.name,
+                            it.location,
+                            it.date,
+                            it.time
+                        )
+                    ))
                 }
             }
 
@@ -208,7 +229,7 @@ class ActivityFragment : Fragment(R.layout.fragment_activity) {
             { tag ->
                 Log.d("ActivityFragment", tag.id.toHex())
                 viewModel.addParticipant(
-                    arguments?.getInt("selected_activity_id")?: -1,
+                    args.activityId,
                     tag.id.toHex())
             },
             NfcAdapter.FLAG_READER_NFC_A or

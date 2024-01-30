@@ -23,6 +23,7 @@ import sk.stuba.fei.uim.dp.attendance.data.api.model.CardRequest
 import sk.stuba.fei.uim.dp.attendance.data.api.model.CardResponse
 import sk.stuba.fei.uim.dp.attendance.data.api.model.NameRequest
 import sk.stuba.fei.uim.dp.attendance.data.api.model.SignupRequest
+import sk.stuba.fei.uim.dp.attendance.data.api.model.UpdateActivityRequest
 import sk.stuba.fei.uim.dp.attendance.data.api.model.UserResponse
 
 interface ApiService {
@@ -68,6 +69,9 @@ interface ApiService {
 
     @DELETE("activity/{id}")
     suspend fun deleteActivity(@Path("id")id: Int): Response<Void>
+
+    @PUT("activity/{id}")
+    suspend fun updateActivity(@Path("id")id: Int, @Body request: UpdateActivityRequest): Response<ActivityResponse>
 
     companion object {
         fun create(context: Context): ApiService {

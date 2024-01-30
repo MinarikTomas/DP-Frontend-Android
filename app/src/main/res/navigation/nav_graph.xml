@@ -15,9 +15,6 @@
         <action
             android:id="@+id/action_home_activity"
             app:destination="@id/fragment_activity">
-            <argument
-                android:name="selected_activity_id"
-                app:argType="integer" />
         </action>
     </fragment>
 
@@ -81,6 +78,12 @@
         <action
             android:id="@+id/action_activity_home"
             app:destination="@+id/fragment_home"/>
+        <action
+            android:id="@+id/action_activity_to_edit"
+            app:destination="@+id/fragment_edit_activity"/>
+        <argument
+            android:name="activity_id"
+            app:argType="integer" />
     </fragment>
 
     <fragment
@@ -114,7 +117,19 @@
         android:id="@+id/fragment_attended_activities"
         android:name="sk.stuba.fei.uim.dp.attendance.fragments.AttendedActivitiesFragment"
         android:label="AttendedActivitiesFragment">
+    </fragment>
 
+    <fragment
+        android:id="@+id/fragment_edit_activity"
+        android:name="sk.stuba.fei.uim.dp.attendance.fragments.EditActivityFragment"
+        android:label="EditActivityFragment">
+
+        <action
+            android:id="@+id/action_edit_to_activity"
+            app:destination="@+id/fragment_activity"/>
+        <argument
+            android:name="activity"
+            app:argType="sk.stuba.fei.uim.dp.attendance.data.model.ParcelableActivity" />
     </fragment>
 
     <action

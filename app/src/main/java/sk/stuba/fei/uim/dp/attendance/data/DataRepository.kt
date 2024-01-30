@@ -10,6 +10,7 @@ import sk.stuba.fei.uim.dp.attendance.data.api.model.CardRequest
 import sk.stuba.fei.uim.dp.attendance.data.api.model.LoginRequest
 import sk.stuba.fei.uim.dp.attendance.data.api.model.NameRequest
 import sk.stuba.fei.uim.dp.attendance.data.api.model.SignupRequest
+import sk.stuba.fei.uim.dp.attendance.data.api.model.UpdateActivityRequest
 import sk.stuba.fei.uim.dp.attendance.data.model.Activity
 import sk.stuba.fei.uim.dp.attendance.data.model.Card
 import sk.stuba.fei.uim.dp.attendance.data.model.User
@@ -357,5 +358,47 @@ class DataRepository private constructor(
             ex.printStackTrace()
         }
         return "Fatal error. Failed to delete activity"
+    }
+
+    suspend fun apiUpdateActivity(
+        id: Int,
+        name: String,
+        location: String,
+        date: String,
+        time: String
+    ): Pair<String, Activity?>{
+        try {
+            val response = service.updateActivity(
+                id,
+                UpdateActivityRequest(
+                    name,
+                    location,
+                    date + " " + time,
+                    false
+            ))
+            if(response.isSuccessful){
+                response.body()?.let {
+                    return Pair("", Activity(
+                        it.id,
+                        it.name,
+                        it.location,
+                        it.time.split(" ")[0],
+                        it.time.split(" ")[1],
+                        it.createdBy,
+                        null,
+                        it.startTime,
+                        it.endTime
+                    ))
+                }
+            }
+            return Pair("Failed to update activity", null)
+        }catch (ex: IOException) {
+            ex.printStackTrace()
+            Log.d("API", ex.message.toString())
+            return Pair("Check internet connection. Failed to update activity", null)
+        } catch (ex: Exception) {
+            ex.printStackTrace()
+        }
+        return Pair("Fatal error. Failed to update activity", null)
     }
 }

@@ -14,8 +14,8 @@ class ActivityViewModel(private val dataRepository: DataRepository): ViewModel()
     private val _getActivityResult = MutableLiveData<String>()
     val getActivityResult: LiveData<String> get() = _getActivityResult
 
-    private val _activityResult = MutableLiveData<Activity?>()
-    val activityResult: LiveData<Activity?> get() = _activityResult
+    private val _activityResult = MutableLiveData<Event<Activity?>>()
+    val activityResult: LiveData<Event<Activity?>> get() = _activityResult
 
     private val _startActivityResult = MutableLiveData<String>()
     val startActivityResult: LiveData<String> get() = _startActivityResult
@@ -51,7 +51,7 @@ class ActivityViewModel(private val dataRepository: DataRepository): ViewModel()
         viewModelScope.launch {
             val result = dataRepository.apiGetActivity(id)
             _getActivityResult.postValue(result.first ?: "")
-            _activityResult.postValue(result.second)
+            _activityResult.postValue(Event(result.second))
             if(result.second != null){
                 name.postValue(result.second!!.name)
                 location.postValue(result.second!!.location ?: "")
@@ -62,7 +62,6 @@ class ActivityViewModel(private val dataRepository: DataRepository): ViewModel()
     }
 
     fun clearActivity(){
-        _activityResult.value = null
         _participantResult.value = null
     }
 

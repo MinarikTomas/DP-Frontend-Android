@@ -63,7 +63,7 @@ class ActivitiesAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         }else {
             (holder as ActivityViewHolder).bind(position)
             holder.itemView.setOnClickListener {
-                val action = HomeFragmentDirections.actionHomeActivity(items[position].activity.id.toInt())
+                val action = HomeFragmentDirections.actionHomeActivity(items[position].activity.id)
                 holder.itemView.findNavController().navigate(action)
             }
         }

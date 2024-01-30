@@ -21,3 +21,9 @@ data class AddParticipantRequest(
 data class NameRequest(
     val name: String
 )
+data class UpdateActivityRequest(
+    val name: String,
+    val location: String,
+    val time: String,
+    val editAll: Boolean
+)
