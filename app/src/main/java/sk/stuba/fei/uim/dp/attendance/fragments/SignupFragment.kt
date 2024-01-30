@@ -52,12 +52,14 @@ class SignupFragment : Fragment(R.layout.fragment_signup) {
             }
 
             viewModel.signupResult.observe(viewLifecycleOwner){
-                if(it.isNotEmpty()){
-                    Snackbar.make(
-                        view.findViewById(R.id.btn_continue),
-                        it,
-                        Snackbar.LENGTH_SHORT
-                    ).show()
+                it.getContentIfNotHandled()?.let {
+                    if(it.isNotEmpty()){
+                        Snackbar.make(
+                            view.findViewById(R.id.btn_continue),
+                            it,
+                            Snackbar.LENGTH_SHORT
+                        ).show()
+                    }
                 }
             }
 

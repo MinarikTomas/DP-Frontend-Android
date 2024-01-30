@@ -21,7 +21,6 @@ class AddCardFragment : Fragment(R.layout.fragment_add_card) {
     private var binding: FragmentAddCardBinding ?= null
     private lateinit var viewModel: ProfileViewModel
     private lateinit var serialNumber: String
-    private var cardAdded = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -69,28 +68,21 @@ class AddCardFragment : Fragment(R.layout.fragment_add_card) {
             }
 
             viewModel.addCardResult.observe(viewLifecycleOwner){
-                if(!cardAdded) return@observe
-                if(it.isNotEmpty()){
-                    Snackbar.make(
-                        view.findViewById(R.id.btn_scan),
-                        it,
-                        Snackbar.LENGTH_SHORT
-                    ).show()
-                    cardAdded = false
-                }else{
-                    cardAdded = true
-                    viewModel.cardName.value = ""
-                    requireView().findNavController().navigate(R.id.action_add_card_profile)
+                it.getContentIfNotHandled()?.let {
+                    if(it.isNotEmpty()){
+                        Snackbar.make(
+                            view.findViewById(R.id.btn_scan),
+                            it,
+                            Snackbar.LENGTH_SHORT
+                        ).show()
+                    }else{
+                        viewModel.cardName.value = ""
+                        requireView().findNavController().navigate(R.id.action_add_card_profile)
+                    }
                 }
             }
         }
     }
-
-    override fun onPause() {
-        super.onPause()
-        cardAdded = false
-    }
-
     override fun onDestroyView() {
         binding = null
         super.onDestroyView()

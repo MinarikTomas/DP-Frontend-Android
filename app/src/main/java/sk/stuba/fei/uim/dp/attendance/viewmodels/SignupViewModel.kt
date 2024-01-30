@@ -6,10 +6,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import sk.stuba.fei.uim.dp.attendance.data.DataRepository
+import sk.stuba.fei.uim.dp.attendance.utils.Event
 
 class SignupViewModel(private val dataRepository: DataRepository): ViewModel() {
-    private val _signupResult = MutableLiveData<String>()
-    val signupResult: LiveData<String> get() = _signupResult
+    private val _signupResult = MutableLiveData<Event<String>>()
+    val signupResult: LiveData<Event<String>> get() = _signupResult
 
     val fullName = MutableLiveData<String>()
     val email = MutableLiveData<String>()
@@ -28,7 +29,7 @@ class SignupViewModel(private val dataRepository: DataRepository): ViewModel() {
                     cardName.value ?: "",
                     serialNumber
                 )
-                _signupResult.postValue(result)
+                _signupResult.postValue(Event(result))
             }
         }
     }

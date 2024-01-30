@@ -30,8 +30,6 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 return ActivityViewModel(DataRepository.getInstance(requireContext())) as T
             }
         })[ActivityViewModel::class.java]
-
-        viewModel.getCreatedActivities(PreferenceData.getInstance().getUser(requireContext())?.id ?: -1)
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -40,6 +38,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             lifecycleOwner = viewLifecycleOwner
             model = viewModel
         }.also { bnd ->
+            viewModel.getCreatedActivities(PreferenceData.getInstance().getUser(requireContext())?.id ?: -1)
 
             val recyclerView = bnd.recyclerviewActivities
             recyclerView.layoutManager = LinearLayoutManager(context)
@@ -53,17 +52,20 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             bnd.past.isChecked = !PreferenceData.getInstance().getIsUpcomingSelected(requireContext())
 
             viewModel.getActivitiesResult.observe(viewLifecycleOwner) {
-                if (it.isNotEmpty()) {
-                    Snackbar.make(
-                        view.findViewById(R.id.bottom_bar),
-                        it,
-                        Snackbar.LENGTH_SHORT
-                    ).show()
+                it.getContentIfNotHandled()?.let {
+                    if (it.isNotEmpty()) {
+                        Snackbar.make(
+                            view.findViewById(R.id.bottom_bar),
+                            it,
+                            Snackbar.LENGTH_SHORT
+                        ).show()
+                    }
                 }
             }
 
             viewModel.activities.observe(viewLifecycleOwner){
-                it?.let {
+                it.getContentIfNotHandled()?.let {
+                    Log.d("HomeFragment", "activities observer")
                     if(it.isNotEmpty()){
                         activities = it
                         if(it.filter { it.startTime.isNotEmpty() && it.endTime.isEmpty() }.isNotEmpty()){

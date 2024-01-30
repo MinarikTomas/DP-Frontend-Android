@@ -89,37 +89,43 @@ class ProfileFragment : Fragment(R.layout.fragment_profile){
             }
 
             viewModel.getCardsResult.observe(viewLifecycleOwner){
-                if (it.isNotEmpty()){
-                    Snackbar.make(
-                        view.findViewById(R.id.btn_logout),
-                        it,
-                        Snackbar.LENGTH_SHORT
-                    ).show()
+                it.getContentIfNotHandled()?.let {
+                    if (it.isNotEmpty()){
+                        Snackbar.make(
+                            view.findViewById(R.id.btn_logout),
+                            it,
+                            Snackbar.LENGTH_SHORT
+                        ).show()
+                    }
                 }
             }
 
             viewModel.deactivateResult.observe(viewLifecycleOwner){
-                if (it.isNotEmpty()){
-                    Snackbar.make(
-                        view.findViewById(R.id.btn_logout),
-                        it,
-                        Snackbar.LENGTH_SHORT
-                    ).show()
+                it.getContentIfNotHandled()?.let {
+                    if (it.isNotEmpty()){
+                        Snackbar.make(
+                            view.findViewById(R.id.btn_logout),
+                            it,
+                            Snackbar.LENGTH_SHORT
+                        ).show()
+                    }
                 }
             }
 
             viewModel.updateCardResult.observe(viewLifecycleOwner){
-                if(it.isNotEmpty()){
-                    Snackbar.make(
-                        view.findViewById(R.id.btn_logout),
-                        it,
-                        Snackbar.LENGTH_SHORT
-                    ).show()
+                it.getContentIfNotHandled()?.let {
+                    if(it.isNotEmpty()){
+                        Snackbar.make(
+                            view.findViewById(R.id.btn_logout),
+                            it,
+                            Snackbar.LENGTH_SHORT
+                        ).show()
+                    }
                 }
             }
 
             viewModel.cards.observe(viewLifecycleOwner){
-                it?.let {
+                it.getContentIfNotHandled()?.let {
                     if(it.isNotEmpty()){
                         cardsAdapter.updateItems((it.map { CardItem(it.name, it.id) }).toMutableList())
                     }

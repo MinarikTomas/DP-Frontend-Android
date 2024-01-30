@@ -7,13 +7,14 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import sk.stuba.fei.uim.dp.attendance.data.DataRepository
 import sk.stuba.fei.uim.dp.attendance.data.model.User
+import sk.stuba.fei.uim.dp.attendance.utils.Event
 
 class LoginViewModel(private val dataRepository: DataRepository): ViewModel() {
-    private val _loginResult = MutableLiveData<String>()
-    val loginResult: LiveData<String> get() = _loginResult
+    private val _loginResult = MutableLiveData<Event<String>>()
+    val loginResult: LiveData<Event<String>> get() = _loginResult
 
-    private val _userResult = MutableLiveData<User?>()
-    val userResult: LiveData<User?> get() = _userResult
+    private val _userResult = MutableLiveData<Event<User?>>()
+    val userResult: LiveData<Event<User?>> get() = _userResult
 
     val email = MutableLiveData<String>()
     val password = MutableLiveData<String>()
@@ -24,8 +25,8 @@ class LoginViewModel(private val dataRepository: DataRepository): ViewModel() {
                 email.value ?: "",
                 password.value ?: ""
             )
-            _loginResult.postValue(result.first ?: "")
-            _userResult.postValue(result.second)
+            _loginResult.postValue(Event(result.first))
+            _userResult.postValue(Event(result.second))
         }
     }
 }

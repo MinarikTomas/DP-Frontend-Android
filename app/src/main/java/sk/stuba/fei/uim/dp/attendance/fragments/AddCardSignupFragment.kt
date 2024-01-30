@@ -57,20 +57,22 @@ class AddCardSignupFragment : Fragment(R.layout.fragment_add_card_signup) {
            }
 
             viewModel.signupResult.observe(viewLifecycleOwner){
-                if(it.isNotEmpty()){
-                    Snackbar.make(
-                        view.findViewById(R.id.btn_scan),
-                        it,
-                        Snackbar.LENGTH_SHORT
-                    ).show()
-                }else{
-                    NfcAdapter.getDefaultAdapter(requireContext()).disableReaderMode(requireActivity())
-                    Snackbar.make(
-                        view.findViewById(R.id.btn_scan),
-                        "Successfully signed up",
-                        Snackbar.LENGTH_SHORT
-                    ).show()
-                    requireView().findNavController().navigate(R.id.action_add_card_to_login)
+                it.getContentIfNotHandled()?.let {
+                    if(it.isNotEmpty()){
+                        Snackbar.make(
+                            view.findViewById(R.id.btn_scan),
+                            it,
+                            Snackbar.LENGTH_SHORT
+                        ).show()
+                    }else{
+                        NfcAdapter.getDefaultAdapter(requireContext()).disableReaderMode(requireActivity())
+                        Snackbar.make(
+                            view.findViewById(R.id.btn_scan),
+                            "Successfully signed up",
+                            Snackbar.LENGTH_SHORT
+                        ).show()
+                        requireView().findNavController().navigate(R.id.action_add_card_to_login)
+                    }
                 }
             }
         }

@@ -1,6 +1,7 @@
 package sk.stuba.fei.uim.dp.attendance.fragments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
@@ -53,17 +54,19 @@ class AttendedActivitiesFragment : Fragment(R.layout.fragment_attended_activitie
             )
 
             viewModel.getAttendedActivitiesResult.observe(viewLifecycleOwner){
-                if(it.isNotEmpty()){
-                    Snackbar.make(
-                        view.findViewById(R.id.recyclerview_attended_activities),
-                        it,
-                        Snackbar.LENGTH_SHORT
-                    ).show()
+                it.getContentIfNotHandled()?.let {
+                    if(it.isNotEmpty()){
+                        Snackbar.make(
+                            view.findViewById(R.id.recyclerview_attended_activities),
+                            it,
+                            Snackbar.LENGTH_SHORT
+                        ).show()
+                    }
                 }
             }
 
             viewModel.attendedActivities.observe(viewLifecycleOwner){
-                it?.let {
+                it.getContentIfNotHandled()?.let {
                     if(it.isNotEmpty()){
                         adapter.updateItems(it.map { AttendedActivityItem(
                             it.id,

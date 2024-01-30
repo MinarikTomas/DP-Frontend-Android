@@ -27,7 +27,6 @@ class ActivityFragment : Fragment(R.layout.fragment_activity) {
     private lateinit var viewModel: ActivityViewModel
 
     private val args: ActivityFragmentArgs by navArgs()
-    private  var activityReceived = false
     private var activity: Activity? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -54,19 +53,20 @@ class ActivityFragment : Fragment(R.layout.fragment_activity) {
             recyclerView.adapter = participantsAdapter
 
             viewModel.getActivityResult.observe(viewLifecycleOwner){
-                if(it.isNotEmpty()){
-                    Snackbar.make(
-                        view.findViewById(R.id.title),
-                        it,
-                        Snackbar.LENGTH_SHORT
-                    ).show()
+                it.getContentIfNotHandled()?.let {
+                    if(it.isNotEmpty()){
+                        Snackbar.make(
+                            view.findViewById(R.id.title),
+                            it,
+                            Snackbar.LENGTH_SHORT
+                        ).show()
+                    }
                 }
             }
 
             viewModel.activityResult.observe(viewLifecycleOwner){ it ->
                 it.getContentIfNotHandled()?.let {
                     activity = it
-                    activityReceived = true
                     Log.d("ActivityFragment", it.name)
                     // activity is running
                     if(it.startTime != "" && it.endTime == ""){
@@ -139,48 +139,52 @@ class ActivityFragment : Fragment(R.layout.fragment_activity) {
             }
 
             viewModel.startActivityResult.observe(viewLifecycleOwner){
-                if(!activityReceived) return@observe
-                if(it.isNotEmpty()){
-                    Snackbar.make(
-                        view.findViewById(R.id.title),
-                        it,
-                        Snackbar.LENGTH_SHORT
-                    ).show()
-                }else{
-                    bnd.btnStart.visibility = View.INVISIBLE
-                    bnd.btnEnd.visibility = View.VISIBLE
-                    PreferenceData.getInstance().putIsActivityRunning(requireContext(), true)
-                    handleNFC()
+                it.getContentIfNotHandled()?.let {
+                    if(it.isNotEmpty()){
+                        Snackbar.make(
+                            view.findViewById(R.id.title),
+                            it,
+                            Snackbar.LENGTH_SHORT
+                        ).show()
+                    }else{
+                        bnd.btnStart.visibility = View.INVISIBLE
+                        bnd.btnEnd.visibility = View.VISIBLE
+                        PreferenceData.getInstance().putIsActivityRunning(requireContext(), true)
+                        handleNFC()
+                    }
                 }
             }
 
             viewModel.endActivityResult.observe(viewLifecycleOwner){
-                if(!activityReceived) return@observe
-                if(it.isNotEmpty()){
-                    Snackbar.make(
-                        view.findViewById(R.id.title),
-                        it,
-                        Snackbar.LENGTH_SHORT
-                    ).show()
-                }else{
-                    bnd.btnEnd.visibility = View.INVISIBLE
-                    PreferenceData.getInstance().putIsActivityRunning(requireContext(), false)
-                    NfcAdapter.getDefaultAdapter(requireContext()).disableReaderMode(requireActivity())
+                it.getContentIfNotHandled()?.let {
+                    if(it.isNotEmpty()){
+                        Snackbar.make(
+                            view.findViewById(R.id.title),
+                            it,
+                            Snackbar.LENGTH_SHORT
+                        ).show()
+                    }else{
+                        bnd.btnEnd.visibility = View.INVISIBLE
+                        PreferenceData.getInstance().putIsActivityRunning(requireContext(), false)
+                        NfcAdapter.getDefaultAdapter(requireContext()).disableReaderMode(requireActivity())
+                    }
                 }
             }
 
             viewModel.addParticipantResult.observe(viewLifecycleOwner){
-                if(it.isNotEmpty()){
-                    Snackbar.make(
-                        view.findViewById(R.id.title),
-                        it,
-                        Snackbar.LENGTH_SHORT
-                    ).show()
+                it.getContentIfNotHandled()?.let {
+                    if(it.isNotEmpty()){
+                        Snackbar.make(
+                            view.findViewById(R.id.title),
+                            it,
+                            Snackbar.LENGTH_SHORT
+                        ).show()
+                    }
                 }
             }
 
             viewModel.participantResult.observe(viewLifecycleOwner){
-                it?.let {
+                it.getContentIfNotHandled()?.let {
                     participantsAdapter.addItem(ParticipantItem(it.name ?: ""))
                 }
             }
@@ -199,12 +203,6 @@ class ActivityFragment : Fragment(R.layout.fragment_activity) {
                 }
             }
         }
-    }
-
-    override fun onPause() {
-        super.onPause()
-        activityReceived = false
-        viewModel.clearActivity()
     }
 
     override fun onDestroyView() {
