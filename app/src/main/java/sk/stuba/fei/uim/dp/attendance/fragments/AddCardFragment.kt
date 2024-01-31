@@ -2,7 +2,6 @@ package sk.stuba.fei.uim.dp.attendance.fragments
 
 import android.nfc.NfcAdapter
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
@@ -13,7 +12,6 @@ import sk.stuba.fei.uim.dp.attendance.R
 import sk.stuba.fei.uim.dp.attendance.data.DataRepository
 import sk.stuba.fei.uim.dp.attendance.data.PreferenceData
 import sk.stuba.fei.uim.dp.attendance.databinding.FragmentAddCardBinding
-import sk.stuba.fei.uim.dp.attendance.databinding.FragmentProfileBinding
 import sk.stuba.fei.uim.dp.attendance.viewmodels.ProfileViewModel
 
 class AddCardFragment : Fragment(R.layout.fragment_add_card) {
@@ -46,7 +44,6 @@ class AddCardFragment : Fragment(R.layout.fragment_add_card) {
                         requireActivity(),
                         { tag ->
                             serialNumber = tag.id.toHex()
-                            Log.d("AddCardFragment", tag.id.toHex())
                             nfcAdapter.disableReaderMode(requireActivity())
                         },
                         NfcAdapter.FLAG_READER_NFC_A or

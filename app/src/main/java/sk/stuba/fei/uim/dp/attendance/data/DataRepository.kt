@@ -40,12 +40,6 @@ class DataRepository private constructor(
         email: String,
         password: String
     ): Pair<String, User?>{
-        if (email.isEmpty()) {
-            return Pair("Email can not be empty", null)
-        }
-        if (password.isEmpty()) {
-            return Pair("Password can not be empty", null)
-        }
         try{
             val response = service.loginUser(LoginRequest(email, password))
             if(response.isSuccessful){
@@ -61,7 +55,7 @@ class DataRepository private constructor(
                     )
                 }
             }
-            return Pair("Failed to login user", null)
+            return Pair("Wrong username or password", null)
         }catch (ex: IOException) {
             ex.printStackTrace()
             Log.d("API", ex.message.toString())

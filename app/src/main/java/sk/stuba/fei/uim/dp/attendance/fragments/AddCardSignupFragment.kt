@@ -2,7 +2,6 @@ package sk.stuba.fei.uim.dp.attendance.fragments
 
 import android.nfc.NfcAdapter
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
@@ -11,14 +10,15 @@ import androidx.navigation.findNavController
 import com.google.android.material.snackbar.Snackbar
 import sk.stuba.fei.uim.dp.attendance.R
 import sk.stuba.fei.uim.dp.attendance.data.DataRepository
-import sk.stuba.fei.uim.dp.attendance.databinding.FragmentAddCardBinding
 import sk.stuba.fei.uim.dp.attendance.databinding.FragmentAddCardSignupBinding
+import sk.stuba.fei.uim.dp.attendance.utils.DisableErrorTextWatcher
 import sk.stuba.fei.uim.dp.attendance.viewmodels.SignupViewModel
 
 class AddCardSignupFragment : Fragment(R.layout.fragment_add_card_signup) {
 
     private var binding: FragmentAddCardSignupBinding ?= null
     private lateinit var viewModel: SignupViewModel
+    private lateinit var serialNumber: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,17 +35,21 @@ class AddCardSignupFragment : Fragment(R.layout.fragment_add_card_signup) {
             lifecycleOwner = viewLifecycleOwner
             model = viewModel
         }.also {bnd ->
+            if (NfcAdapter.getDefaultAdapter(requireContext()) == null){
+                Snackbar.make(
+                    view.findViewById(R.id.btn_scan),
+                    "NFC not available",
+                    Snackbar.LENGTH_SHORT
+                ).show()
+            }
 
            bnd.btnScan.apply {
                setOnClickListener {
                    val nfcAdapter = NfcAdapter.getDefaultAdapter(requireContext())
-
                    nfcAdapter?.enableReaderMode(
                        requireActivity(),
-                       NfcAdapter.ReaderCallback { tag ->
-                           Log.d("NfcActivity", "tag discovered")
-                           Log.d("NfcActivity", tag.id.toHex())
-                           viewModel.signupUser(tag.id.toHex())
+                       { tag ->
+                           serialNumber = tag.id.toHex()
                        },
                        NfcAdapter.FLAG_READER_NFC_A or
                                NfcAdapter.FLAG_READER_NFC_B or
@@ -55,6 +59,12 @@ class AddCardSignupFragment : Fragment(R.layout.fragment_add_card_signup) {
                    )
                }
            }
+
+            bnd.btnSignup.setOnClickListener {
+                if(isInputValid()){
+                    viewModel.signupUser(serialNumber)
+                }
+            }
 
             viewModel.signupResult.observe(viewLifecycleOwner){
                 it.getContentIfNotHandled()?.let {
@@ -75,10 +85,33 @@ class AddCardSignupFragment : Fragment(R.layout.fragment_add_card_signup) {
                     }
                 }
             }
+
+            bnd.textInputLayoutCardName.editText?.addTextChangedListener(
+                DisableErrorTextWatcher(bnd.textInputLayoutCardName)
+            )
         }
     }
 
+    private fun isInputValid(): Boolean{
+        var isValid = true
+        if(viewModel.cardName.value.isNullOrEmpty()){
+            binding!!.textInputLayoutCardName.isErrorEnabled = true
+            binding!!.textInputLayoutCardName.error = "Cannot be empty"
+            isValid = false
+        }
+        if(!this::serialNumber.isInitialized){
+            Snackbar.make(
+                requireView(),
+                "Card has not been scanned yet",
+                Snackbar.LENGTH_SHORT
+            ).show()
+            isValid = false
+        }
+        return isValid
+    }
+
     override fun onDestroyView() {
+        NfcAdapter.getDefaultAdapter(requireContext())?.disableReaderMode(requireActivity())
         binding = null
         super.onDestroyView()
     }

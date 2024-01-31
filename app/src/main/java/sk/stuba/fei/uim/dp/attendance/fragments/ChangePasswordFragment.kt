@@ -1,8 +1,6 @@
 package sk.stuba.fei.uim.dp.attendance.fragments
 
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
@@ -13,6 +11,7 @@ import sk.stuba.fei.uim.dp.attendance.R
 import sk.stuba.fei.uim.dp.attendance.data.DataRepository
 import sk.stuba.fei.uim.dp.attendance.data.PreferenceData
 import sk.stuba.fei.uim.dp.attendance.databinding.FragmentChangePasswordBinding
+import sk.stuba.fei.uim.dp.attendance.utils.DisableErrorTextWatcher
 import sk.stuba.fei.uim.dp.attendance.viewmodels.ProfileViewModel
 
 class ChangePasswordFragment: Fragment(R.layout.fragment_change_password) {
@@ -63,38 +62,13 @@ class ChangePasswordFragment: Fragment(R.layout.fragment_change_password) {
                 }
             }
 
-            bnd.newPassword.editText?.addTextChangedListener(object: TextWatcher{
-                override fun beforeTextChanged(
-                    s: CharSequence?,
-                    start: Int,
-                    count: Int,
-                    after: Int
-                ) {
-                }
+            bnd.newPassword.editText?.addTextChangedListener(
+                DisableErrorTextWatcher(bnd.newPassword)
+            )
 
-                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                    bnd.newPassword.isErrorEnabled = false
-                }
-
-                override fun afterTextChanged(s: Editable?) {
-                }
-
-            })
-
-            bnd.repeatPassword.editText?.addTextChangedListener(object: TextWatcher{
-                override fun beforeTextChanged(
-                    s: CharSequence?,
-                    start: Int,
-                    count: Int,
-                    after: Int
-                ) {}
-
-                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                    bnd.repeatPassword.isErrorEnabled = false
-                }
-
-                override fun afterTextChanged(s: Editable?) {}
-            })
+            bnd.repeatPassword.editText?.addTextChangedListener(
+                DisableErrorTextWatcher(bnd.repeatPassword)
+            )
         }
     }
 

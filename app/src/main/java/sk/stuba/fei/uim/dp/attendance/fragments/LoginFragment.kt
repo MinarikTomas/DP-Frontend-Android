@@ -11,11 +11,12 @@ import sk.stuba.fei.uim.dp.attendance.R
 import sk.stuba.fei.uim.dp.attendance.data.DataRepository
 import sk.stuba.fei.uim.dp.attendance.data.PreferenceData
 import sk.stuba.fei.uim.dp.attendance.databinding.FragmentLoginBinding
+import sk.stuba.fei.uim.dp.attendance.utils.DisableErrorTextWatcher
 import sk.stuba.fei.uim.dp.attendance.viewmodels.LoginViewModel
 
 class LoginFragment : Fragment(R.layout.fragment_login) {
 
-    private var binding: FragmentLoginBinding ?= null
+    private var binding: FragmentLoginBinding?= null
     private lateinit var viewModel: LoginViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,8 +45,10 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
             }
             
             bnd.btnLogin.apply { 
-                setOnClickListener { 
-                    viewModel.loginUser()
+                setOnClickListener {
+                    if(areAllFieldsFilled()){
+                        viewModel.loginUser()
+                    }
                 }
             }
 
@@ -67,7 +70,28 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                     requireView().findNavController().navigate(R.id.action_login_home)
                 }
             }
+
+            bnd.textInputLayoutEmail.editText?.addTextChangedListener(
+                DisableErrorTextWatcher(bnd.textInputLayoutEmail)
+            )
+
+            bnd.textInputLayoutPassword.editText?.addTextChangedListener(
+                DisableErrorTextWatcher(bnd.textInputLayoutPassword))
         }
+    }
+
+    private fun areAllFieldsFilled(): Boolean{
+        var areFilled = true
+        if(viewModel.email.value.isNullOrEmpty()){
+            binding!!.textInputLayoutEmail.isErrorEnabled = true
+            binding!!.textInputLayoutEmail.error = "Cannot be empty"
+            areFilled = false
+        }
+        if(viewModel.password.value.isNullOrEmpty()){
+            binding!!.textInputLayoutPassword.isErrorEnabled = true
+            binding!!.textInputLayoutPassword.error = "Cannot be empty"
+        }
+        return areFilled
     }
 
     override fun onDestroyView() {
