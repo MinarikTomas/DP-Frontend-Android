@@ -21,6 +21,7 @@ import sk.stuba.fei.uim.dp.attendance.data.api.model.ActivityWithParticipantsRes
 import sk.stuba.fei.uim.dp.attendance.data.api.model.AddParticipantRequest
 import sk.stuba.fei.uim.dp.attendance.data.api.model.CardRequest
 import sk.stuba.fei.uim.dp.attendance.data.api.model.CardResponse
+import sk.stuba.fei.uim.dp.attendance.data.api.model.ChangePasswordRequest
 import sk.stuba.fei.uim.dp.attendance.data.api.model.NameRequest
 import sk.stuba.fei.uim.dp.attendance.data.api.model.SignupRequest
 import sk.stuba.fei.uim.dp.attendance.data.api.model.UpdateActivityRequest
@@ -73,6 +74,8 @@ interface ApiService {
     @PUT("activity/{id}")
     suspend fun updateActivity(@Path("id")id: Int, @Body request: UpdateActivityRequest): Response<ActivityResponse>
 
+    @PUT("user/{id}")
+    suspend fun changePassword(@Path("id")id: Int, @Body request: ChangePasswordRequest): Response<Void>
     companion object {
         fun create(context: Context): ApiService {
             val client = OkHttpClient.Builder()

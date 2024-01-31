@@ -7,6 +7,7 @@ import sk.stuba.fei.uim.dp.attendance.data.api.ApiService
 import sk.stuba.fei.uim.dp.attendance.data.api.model.AddActivityRequest
 import sk.stuba.fei.uim.dp.attendance.data.api.model.AddParticipantRequest
 import sk.stuba.fei.uim.dp.attendance.data.api.model.CardRequest
+import sk.stuba.fei.uim.dp.attendance.data.api.model.ChangePasswordRequest
 import sk.stuba.fei.uim.dp.attendance.data.api.model.LoginRequest
 import sk.stuba.fei.uim.dp.attendance.data.api.model.NameRequest
 import sk.stuba.fei.uim.dp.attendance.data.api.model.SignupRequest
@@ -400,5 +401,21 @@ class DataRepository private constructor(
             ex.printStackTrace()
         }
         return Pair("Fatal error. Failed to update activity", null)
+    }
+
+    suspend fun apiChangePassword(id: Int, password: String): String{
+        try {
+            val response = service.changePassword(id, ChangePasswordRequest(password))
+            if(response.isSuccessful){
+                return ""
+            }
+            return "Failed to change password"
+        }catch (ex: IOException) {
+            ex.printStackTrace()
+            return "Check internet connection. Failed to change password"
+        } catch (ex: Exception) {
+            ex.printStackTrace()
+        }
+        return "Fatal error. Failed to change password"
     }
 }

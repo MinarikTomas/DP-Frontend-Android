@@ -100,6 +100,9 @@
         <action
             android:id="@+id/action_profile_attended_activities"
             app:destination="@+id/fragment_attended_activities"/>
+        <action
+            android:id="@+id/action_profile_change_password"
+            app:destination="@+id/fragment_change_password"/>
 
     </fragment>
 
@@ -130,6 +133,16 @@
         <argument
             android:name="activity"
             app:argType="sk.stuba.fei.uim.dp.attendance.data.model.ParcelableActivity" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/fragment_change_password"
+        android:name="sk.stuba.fei.uim.dp.attendance.fragments.ChangePasswordFragment"
+        android:label="FragmentChangePassword">
+
+        <action
+            android:id="@+id/action_change_password_profile"
+            app:destination="@+id/fragment_profile"/>
     </fragment>
 
     <action

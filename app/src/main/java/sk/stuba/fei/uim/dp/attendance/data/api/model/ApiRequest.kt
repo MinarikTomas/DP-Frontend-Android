@@ -27,3 +27,7 @@ data class UpdateActivityRequest(
     val time: String,
     val editAll: Boolean
 )
+
+data class ChangePasswordRequest(
+    val newPassword: String
+)

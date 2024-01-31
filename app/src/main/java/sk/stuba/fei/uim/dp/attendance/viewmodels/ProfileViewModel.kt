@@ -25,9 +25,14 @@ class ProfileViewModel(private val dataRepository: DataRepository): ViewModel() 
     private val _updateCardResult = MutableLiveData<Event<String>>()
     val updateCardResult: LiveData<Event<String>> get() = _updateCardResult
 
+    private val _changePasswordResult = MutableLiveData<Event<String>>()
+    val changePasswordResult: LiveData<Event<String>> get() = _changePasswordResult
+
     val fullName = MutableLiveData<String>()
     val email = MutableLiveData<String>()
     val cardName = MutableLiveData<String>()
+    val newPassword = MutableLiveData<String>()
+    val repeatPassword = MutableLiveData<String>()
 
     fun getCards(uid: Int){
         viewModelScope.launch {
@@ -64,6 +69,13 @@ class ProfileViewModel(private val dataRepository: DataRepository): ViewModel() 
             _updateCardResult.postValue(Event(result))
             val resultGet = dataRepository.apiGetCards(id)
             _cards.postValue(Event(resultGet.second))
+        }
+    }
+
+    fun changePassword(id: Int){
+        viewModelScope.launch {
+            val result = dataRepository.apiChangePassword(id, newPassword.value ?: "")
+            _changePasswordResult.postValue(Event(result))
         }
     }
 }

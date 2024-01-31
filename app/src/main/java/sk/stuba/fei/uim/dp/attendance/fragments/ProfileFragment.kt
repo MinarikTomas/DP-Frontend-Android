@@ -88,6 +88,12 @@ class ProfileFragment : Fragment(R.layout.fragment_profile){
                 }
             }
 
+            bnd.changePassword.apply {
+                setOnClickListener {
+                    it.findNavController().navigate(R.id.action_profile_change_password)
+                }
+            }
+
             viewModel.getCardsResult.observe(viewLifecycleOwner){
                 it.getContentIfNotHandled()?.let {
                     if (it.isNotEmpty()){
