@@ -14,6 +14,7 @@ import sk.stuba.fei.uim.dp.attendance.adapters.CardItem
 import sk.stuba.fei.uim.dp.attendance.adapters.CardsAdapter
 import sk.stuba.fei.uim.dp.attendance.data.DataRepository
 import sk.stuba.fei.uim.dp.attendance.data.PreferenceData
+import sk.stuba.fei.uim.dp.attendance.databinding.CardItemBinding
 import sk.stuba.fei.uim.dp.attendance.databinding.FragmentProfileBinding
 import sk.stuba.fei.uim.dp.attendance.utils.SpacesItemDecoration
 import sk.stuba.fei.uim.dp.attendance.viewmodels.ProfileViewModel
@@ -56,16 +57,21 @@ class ProfileFragment : Fragment(R.layout.fragment_profile){
                 SpacesItemDecoration(10)
             )
             cardsAdapter.setOnClickDeleteListener(object: CardsAdapter.OnClickListener{
-                override fun onClick(position: Int, model: CardItem) {
+                override fun onClick(position: Int, model: CardItem, cardBinding: CardItemBinding) {
                     viewModel.deactivateCard(model.id)
                     deletedCardPosition = position
                 }
             })
             cardsAdapter.setOnClickEditSaveListener(object: CardsAdapter.OnClickListener{
-                override fun onClick(position: Int, model: CardItem) {
-                    viewModel.updateCard(model.id, model.name)
-                    updatedCard = model
-                    updatedCardPosition = position
+                override fun onClick(position: Int, model: CardItem, cardBinding: CardItemBinding) {
+                    if(model.name.isEmpty()){
+                        cardBinding.nameEdit.isErrorEnabled = true
+                        cardBinding.nameEdit.error = "Cannot be empty"
+                    }else{
+                        viewModel.updateCard(model.id, model.name)
+                        updatedCard = model
+                        updatedCardPosition = position
+                    }
                 }
             })
 
@@ -127,6 +133,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile){
                             Snackbar.LENGTH_SHORT
                         ).show()
                     }
+                    cardsAdapter.updateItem(updatedCardPosition, updatedCard)
                 }
             }
 

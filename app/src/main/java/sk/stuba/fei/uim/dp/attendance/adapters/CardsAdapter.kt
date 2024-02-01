@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import sk.stuba.fei.uim.dp.attendance.databinding.CardItemBinding
 import sk.stuba.fei.uim.dp.attendance.utils.CardItemDiffCallback
+import sk.stuba.fei.uim.dp.attendance.utils.DisableErrorTextWatcher
 
 data class CardItem(val name: String, val id: Int)
 class CardsAdapter : RecyclerView.Adapter<CardsAdapter.CardsViewHolder>(){
@@ -29,7 +30,7 @@ class CardsAdapter : RecyclerView.Adapter<CardsAdapter.CardsViewHolder>(){
         holder.binding.nameEdit.editText?.setText(items[position].name)
         holder.binding.delete.setOnClickListener {
             if(onClickDeleteListener != null){
-                onClickDeleteListener!!.onClick(position, items[position])
+                onClickDeleteListener!!.onClick(position, items[position], holder.binding)
             }
         }
         holder.binding.edit.setOnClickListener {
@@ -42,9 +43,15 @@ class CardsAdapter : RecyclerView.Adapter<CardsAdapter.CardsViewHolder>(){
             Log.d("CardsAdapter", holder.binding.nameEdit.editText?.text.toString())
             if(onClickEditSaveListener != null){
                 onClickEditSaveListener!!.onClick(position,
-                    CardItem(holder.binding.nameEdit.editText?.text.toString(), items[position].id))
+                    CardItem(
+                        holder.binding.nameEdit.editText?.text.toString(),
+                        items[position].id),
+                        holder.binding)
             }
         }
+        holder.binding.nameEdit.editText?.addTextChangedListener(
+            DisableErrorTextWatcher(holder.binding.nameEdit)
+        )
     }
 
     fun updateItems(newItems: MutableList<CardItem>) {
@@ -74,6 +81,6 @@ class CardsAdapter : RecyclerView.Adapter<CardsAdapter.CardsViewHolder>(){
     }
 
     interface OnClickListener{
-        fun onClick(position: Int, model: CardItem)
+        fun onClick(position: Int, model: CardItem, cardBinding: CardItemBinding)
     }
 }

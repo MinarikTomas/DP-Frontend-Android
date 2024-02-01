@@ -12,6 +12,7 @@ import sk.stuba.fei.uim.dp.attendance.R
 import sk.stuba.fei.uim.dp.attendance.data.DataRepository
 import sk.stuba.fei.uim.dp.attendance.data.PreferenceData
 import sk.stuba.fei.uim.dp.attendance.databinding.FragmentAddCardBinding
+import sk.stuba.fei.uim.dp.attendance.utils.DisableErrorTextWatcher
 import sk.stuba.fei.uim.dp.attendance.viewmodels.ProfileViewModel
 
 class AddCardFragment : Fragment(R.layout.fragment_add_card) {
@@ -78,7 +79,28 @@ class AddCardFragment : Fragment(R.layout.fragment_add_card) {
                     }
                 }
             }
+            bnd.textInputLayoutCardName.editText?.addTextChangedListener(
+                DisableErrorTextWatcher(bnd.textInputLayoutCardName)
+            )
         }
+    }
+
+    private fun isInputValid(): Boolean{
+        var isValid = true
+        if(viewModel.cardName.value.isNullOrEmpty()){
+            binding!!.textInputLayoutCardName.isErrorEnabled = true
+            binding!!.textInputLayoutCardName.error = "Cannot be empty"
+            isValid = false
+        }
+        if(!this::serialNumber.isInitialized){
+            Snackbar.make(
+                requireView(),
+                "Card has not been scanned yet",
+                Snackbar.LENGTH_SHORT
+            ).show()
+            isValid = false
+        }
+        return isValid
     }
     override fun onDestroyView() {
         binding = null
