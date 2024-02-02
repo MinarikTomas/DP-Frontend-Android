@@ -12,4 +12,7 @@
     <style name="card_item_style">
         <item name="android:background">@color/dark_gray</item>
     </style>
+    <style name="login_connect_with_style">
+        <item name="android:background">?android:colorBackground</item>
+    </style>
 </resources>

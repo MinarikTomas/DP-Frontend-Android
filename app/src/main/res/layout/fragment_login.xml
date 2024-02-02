@@ -12,7 +12,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#FEFAFD">
+        >
 
         <TextView
             android:id="@+id/title"
@@ -128,11 +128,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="36dp"
-            android:background="@color/white_bg"
             android:paddingStart="5dp"
             android:paddingEnd="5dp"
             android:text="Or connect with"
-            android:textColor="@color/gray"
+            style="@style/login_connect_with_style"
             android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
