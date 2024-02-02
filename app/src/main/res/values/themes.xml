@@ -3,6 +3,7 @@
     <style name="Base.Theme.Attendance" parent="Theme.Material3.DayNight.NoActionBar">
         <item name="fontFamily">@font/inconsolata</item>
         <item name="colorPrimary">@color/blue</item>
+        <item name="colorPrimaryDark">@color/blue</item>
     </style>
 
     <style name="Theme.Attendance" parent="Base.Theme.Attendance" />

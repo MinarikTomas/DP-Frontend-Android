@@ -62,7 +62,7 @@
             android:layout_height="1dp"
             android:layout_marginStart="50dp"
             android:layout_marginEnd="50dp"
-            android:background="@color/black"
+            style="@style/line_style"
             app:layout_constraintTop_toBottomOf="@+id/change_password"
              />
 
@@ -82,7 +82,7 @@
             android:layout_height="1dp"
             android:layout_marginStart="50dp"
             android:layout_marginEnd="50dp"
-            android:background="@color/black"
+            style="@style/line_style"
             app:layout_constraintTop_toBottomOf="@+id/attended_activities"
             />
 
@@ -122,7 +122,7 @@
             android:layout_height="1dp"
             android:layout_marginStart="50dp"
             android:layout_marginEnd="50dp"
-            android:background="@color/black"
+            style="@style/line_style"
             app:layout_constraintTop_toBottomOf="@+id/add_card"
              />
 

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="line_style">
+        <item name="android:background">@color/white</item>
+    </style>
+    <style name="bottom_bar_style">
+        <item name="android:background">@color/dark_gray</item>
+    </style>
+    <style name="activity_item_style">
+        <item name="android:background">@color/dark_gray</item>
+    </style>
+    <style name="card_item_style">
+        <item name="android:background">@color/dark_gray</item>
+    </style>
+</resources>
