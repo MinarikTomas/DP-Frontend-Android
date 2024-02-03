@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="gray_switch">#3E3E3E</color>
+    <color name="gray_bg">#3E3E3E</color>
 </resources>

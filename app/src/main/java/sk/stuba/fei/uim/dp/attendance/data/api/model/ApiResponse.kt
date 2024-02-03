@@ -1,6 +1,6 @@
 package sk.stuba.fei.uim.dp.attendance.data.api.model
 
-data class AuthResponse(val accessToken: String)
+data class AuthResponse(val accessToken: String, val refreshToken: String)
 data class ActivityResponse(
     val id: Int,
     val name: String,

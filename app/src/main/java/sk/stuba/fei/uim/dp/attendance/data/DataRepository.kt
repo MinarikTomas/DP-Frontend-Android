@@ -50,7 +50,8 @@ class DataRepository private constructor(
                         jwt.getClaim("fullName").asString(),
                         jwt.subject,
                         jwt.getClaim("id").asInt(),
-                        it.accessToken
+                        it.accessToken,
+                        it.refreshToken
                         )
                     )
                 }
@@ -163,7 +164,7 @@ class DataRepository private constructor(
                         it.time.split(" ")[0],
                         it.time.split(" ")[1],
                         it.createdBy,
-                        it.participants.map {user-> User(user?.fullName, "", -1, "") },
+                        it.participants.map {user-> User(user?.fullName, "", -1, "", "") },
                         it.startTime,
                         it.endTime
                         )
@@ -222,6 +223,7 @@ class DataRepository private constructor(
                         it.fullName,
                         it.email,
                         it.id,
+                        "",
                         ""
                     ))
                 }

@@ -2,6 +2,7 @@ package sk.stuba.fei.uim.dp.attendance.data.api
 
 import android.content.Context
 import okhttp3.OkHttpClient
+import retrofit2.Call
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -13,6 +14,7 @@ import retrofit2.http.PUT
 import retrofit2.http.Path
 import sk.stuba.fei.uim.dp.attendance.config.AppConfig
 import sk.stuba.fei.uim.dp.attendance.data.api.helper.AuthInterceptor
+import sk.stuba.fei.uim.dp.attendance.data.api.helper.TokenAuthenticator
 import sk.stuba.fei.uim.dp.attendance.data.api.model.AddActivityRequest
 import sk.stuba.fei.uim.dp.attendance.data.api.model.LoginRequest
 import sk.stuba.fei.uim.dp.attendance.data.api.model.AuthResponse
@@ -76,10 +78,13 @@ interface ApiService {
 
     @PUT("user/{id}")
     suspend fun changePassword(@Path("id")id: Int, @Body request: ChangePasswordRequest): Response<Void>
+    @POST("auth/refresh")
+    fun refreshTokenBlocking(): Call<AuthResponse>
     companion object {
         fun create(context: Context): ApiService {
             val client = OkHttpClient.Builder()
                 .addInterceptor(AuthInterceptor(context))
+                .authenticator(TokenAuthenticator(context))
                 .build()
             val retrofit = Retrofit.Builder()
                 .client(client)

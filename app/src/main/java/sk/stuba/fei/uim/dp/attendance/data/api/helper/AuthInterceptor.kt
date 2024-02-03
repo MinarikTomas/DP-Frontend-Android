@@ -18,14 +18,13 @@ class AuthInterceptor(private val context: Context) : Interceptor {
             || chain.request().url().toString().contains("/auth/login", true)
         ) {
             //here we do not need a authorization token
-//        } else if (chain.request().url.toUrl().path.contains("/user/refresh.php", true)) {
-//            //when refreshing token we need to add our user id
-//            PreferenceData.getInstance().getUser(context)?.id?.let {
-//                request.header(
-//                    "x-user",
-//                    it
-//                )
-//            }
+        } else if (chain.request().url().toString().contains("/auth/refresh", true)) {
+            //when refreshing token we need to add refresh token
+            val refreshToken = PreferenceData.getInstance().getUser(context)?.refresh
+            request.header(
+                "Authorization",
+                "Bearer $refreshToken"
+                )
         } else {
             //we add auth token
             val token = PreferenceData.getInstance().getUser(context)?.access
