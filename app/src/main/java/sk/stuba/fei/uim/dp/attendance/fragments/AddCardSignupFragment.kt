@@ -10,6 +10,7 @@ import androidx.navigation.findNavController
 import com.google.android.material.snackbar.Snackbar
 import sk.stuba.fei.uim.dp.attendance.R
 import sk.stuba.fei.uim.dp.attendance.data.DataRepository
+import sk.stuba.fei.uim.dp.attendance.data.PreferenceData
 import sk.stuba.fei.uim.dp.attendance.databinding.FragmentAddCardSignupBinding
 import sk.stuba.fei.uim.dp.attendance.utils.DisableErrorTextWatcher
 import sk.stuba.fei.uim.dp.attendance.viewmodels.SignupViewModel

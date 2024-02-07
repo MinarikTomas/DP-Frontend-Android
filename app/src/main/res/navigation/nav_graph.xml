@@ -157,4 +157,8 @@
         android:id="@+id/action_to_profile"
         app:destination="@+id/fragment_profile"/>
 
+    <action
+        android:id="@+id/action_to_login"
+        app:destination="@+id/fragment_login"/>
+
 </navigation>

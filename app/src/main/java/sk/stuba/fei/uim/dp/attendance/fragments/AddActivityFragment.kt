@@ -38,7 +38,9 @@ class AddActivityFragment : Fragment(R.layout.fragment_add_activity) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        if (PreferenceData.getInstance().getUser(requireContext()) == null){
+            requireView().findNavController().navigate(R.id.action_to_login)
+        }
         binding = FragmentAddActivityBinding.bind(view).apply {
             lifecycleOwner = viewLifecycleOwner
             model = viewModel

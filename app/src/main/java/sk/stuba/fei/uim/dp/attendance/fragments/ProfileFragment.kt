@@ -42,7 +42,9 @@ class ProfileFragment : Fragment(R.layout.fragment_profile){
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        if (PreferenceData.getInstance().getUser(requireContext()) == null){
+            requireView().findNavController().navigate(R.id.action_to_login)
+        }
         binding = FragmentProfileBinding.bind(view).apply {
             lifecycleOwner = viewLifecycleOwner
             model = viewModel

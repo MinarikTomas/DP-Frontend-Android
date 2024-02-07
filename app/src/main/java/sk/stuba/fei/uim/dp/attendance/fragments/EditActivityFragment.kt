@@ -11,6 +11,7 @@ import androidx.navigation.fragment.navArgs
 import com.google.android.material.snackbar.Snackbar
 import sk.stuba.fei.uim.dp.attendance.R
 import sk.stuba.fei.uim.dp.attendance.data.DataRepository
+import sk.stuba.fei.uim.dp.attendance.data.PreferenceData
 import sk.stuba.fei.uim.dp.attendance.databinding.FragmentEditActivityBinding
 import sk.stuba.fei.uim.dp.attendance.utils.DisableErrorTextWatcher
 import sk.stuba.fei.uim.dp.attendance.viewmodels.ActivityViewModel
@@ -34,7 +35,9 @@ class EditActivityFragment : Fragment(R.layout.fragment_edit_activity) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        if (PreferenceData.getInstance().getUser(requireContext()) == null){
+            requireView().findNavController().navigate(R.id.action_to_login)
+        }
         binding = FragmentEditActivityBinding.bind(view).apply {
             lifecycleOwner = viewLifecycleOwner
             model = viewModel

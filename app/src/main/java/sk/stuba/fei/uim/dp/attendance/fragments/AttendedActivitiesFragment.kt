@@ -6,6 +6,7 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
@@ -37,7 +38,9 @@ class AttendedActivitiesFragment : Fragment(R.layout.fragment_attended_activitie
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        if (PreferenceData.getInstance().getUser(requireContext()) == null){
+            requireView().findNavController().navigate(R.id.action_to_login)
+        }
         binding = FragmentAttendedActivitiesBinding.bind(view).apply {
             lifecycleOwner = viewLifecycleOwner
             model = viewModel

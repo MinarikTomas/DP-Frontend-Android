@@ -40,6 +40,9 @@ class ActivityFragment : Fragment(R.layout.fragment_activity) {
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        if (PreferenceData.getInstance().getUser(requireContext()) == null){
+            requireView().findNavController().navigate(R.id.action_to_login)
+        }
 
         val callback = requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
             requireView().findNavController().navigate(R.id.action_activity_home)

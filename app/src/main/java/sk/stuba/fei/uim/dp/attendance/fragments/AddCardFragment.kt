@@ -32,7 +32,9 @@ class AddCardFragment : Fragment(R.layout.fragment_add_card) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        if (PreferenceData.getInstance().getUser(requireContext()) == null){
+            requireView().findNavController().navigate(R.id.action_to_login)
+        }
         binding = FragmentAddCardBinding.bind(view).apply {
             lifecycleOwner = viewLifecycleOwner
             model = viewModel
