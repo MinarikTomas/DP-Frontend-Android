@@ -1,6 +1,7 @@
 package sk.stuba.fei.uim.dp.attendance.data.api.helper
 
 import android.content.Context
+import androidx.navigation.Navigation
 import okhttp3.Authenticator
 import okhttp3.Request
 import okhttp3.Route
@@ -14,6 +15,7 @@ class TokenAuthenticator(val context: Context): Authenticator {
         if (response.request().url().toString().contains("/auth/signup", true)
             || response.request().url().toString().contains("/auth/login", true)
             || response.request().url().toString().contains("/auth/refresh", true)
+            || response.request().url().toString().contains("/auth/google", true)
         ) {
         } else {
             //if the authorization token was required, but it was rejected from REST API, it is probably outdated

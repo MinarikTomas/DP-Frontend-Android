@@ -15,4 +15,7 @@
     <style name="login_connect_with_style">
         <item name="android:background">?android:colorBackground</item>
     </style>
+    <style name="google_button">
+        <item name="android:background">@color/gray_bg</item>
+    </style>
 </resources>

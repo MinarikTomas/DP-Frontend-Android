@@ -29,4 +29,12 @@ class LoginViewModel(private val dataRepository: DataRepository): ViewModel() {
             _userResult.postValue(Event(result.second))
         }
     }
+
+    fun googleLogin(token: String){
+        viewModelScope.launch {
+            val result = dataRepository.apiGoogleLogin(token)
+            _loginResult.postValue(Event(result.first))
+            _userResult.postValue(Event(result.second))
+        }
+    }
 }

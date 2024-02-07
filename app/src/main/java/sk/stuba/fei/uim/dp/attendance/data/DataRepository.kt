@@ -8,6 +8,7 @@ import sk.stuba.fei.uim.dp.attendance.data.api.model.AddActivityRequest
 import sk.stuba.fei.uim.dp.attendance.data.api.model.AddParticipantRequest
 import sk.stuba.fei.uim.dp.attendance.data.api.model.CardRequest
 import sk.stuba.fei.uim.dp.attendance.data.api.model.ChangePasswordRequest
+import sk.stuba.fei.uim.dp.attendance.data.api.model.GoogleLoginRequest
 import sk.stuba.fei.uim.dp.attendance.data.api.model.LoginRequest
 import sk.stuba.fei.uim.dp.attendance.data.api.model.NameRequest
 import sk.stuba.fei.uim.dp.attendance.data.api.model.SignupRequest
@@ -45,11 +46,10 @@ class DataRepository private constructor(
             if(response.isSuccessful){
                 response.body()?.let {
                     val jwt = JWT(it.accessToken)
-                    Log.d("API", "success")
                     return Pair("", User(
-                        jwt.getClaim("fullName").asString(),
-                        jwt.subject,
-                        jwt.getClaim("id").asInt(),
+                        jwt.getClaim("fullName").asString() ?: "",
+                        jwt.subject ?: "",
+                        jwt.getClaim("id").asInt() ?: -1,
                         it.accessToken,
                         it.refreshToken
                         )
@@ -164,7 +164,7 @@ class DataRepository private constructor(
                         it.time.split(" ")[0],
                         it.time.split(" ")[1],
                         it.createdBy,
-                        it.participants.map {user-> User(user?.fullName, "", -1, "", "") },
+                        it.participants.map {user-> User(user?.fullName ?: "", "", -1, "", "") },
                         it.startTime,
                         it.endTime
                         )
@@ -413,5 +413,33 @@ class DataRepository private constructor(
             ex.printStackTrace()
         }
         return "Fatal error. Failed to change password"
+    }
+
+    suspend fun apiGoogleLogin(token: String): Pair<String, User?>{
+        try {
+            val response = service.googleLogin(GoogleLoginRequest(token))
+            if (response.isSuccessful){
+                response.body()?.let {
+                    val jwt = JWT(it.accessToken)
+                    val user = User(
+                        jwt.getClaim("fullName").asString() ?: "",
+                        jwt.subject ?: "",
+                        jwt.getClaim("id").asInt() ?: -1,
+                        it.accessToken,
+                        it.refreshToken,
+                        jwt.getClaim("hasCard").asBoolean()
+                    )
+                    return Pair("", user)
+                }
+            }
+            return Pair("Failed to login user", null)
+        }catch (ex: IOException) {
+            ex.printStackTrace()
+            Log.d("API", ex.message.toString())
+            return Pair("Check internet connection. Failed to login user.", null)
+        } catch (ex: Exception) {
+            ex.printStackTrace()
+        }
+        return Pair("Fatal error. Failed to login user.", null)
     }
 }

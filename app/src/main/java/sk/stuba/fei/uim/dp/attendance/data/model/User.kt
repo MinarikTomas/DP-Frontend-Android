@@ -1,15 +1,19 @@
 package sk.stuba.fei.uim.dp.attendance.data.model
 
+import android.os.Parcelable
 import com.google.gson.Gson
+import kotlinx.parcelize.Parcelize
 import java.io.IOException
 
+@Parcelize
 data class User(
-    val name: String?,
-    val email: String?,
-    val id: Int?,
+    val name: String,
+    val email: String,
+    val id: Int,
     val access: String,
-    val refresh: String
-){
+    val refresh: String,
+    val hasCard: Boolean? = true
+) : Parcelable{
 
     fun toJson(): String? {
         return try {

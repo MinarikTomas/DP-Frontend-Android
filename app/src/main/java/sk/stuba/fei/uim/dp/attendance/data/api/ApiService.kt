@@ -24,6 +24,7 @@ import sk.stuba.fei.uim.dp.attendance.data.api.model.AddParticipantRequest
 import sk.stuba.fei.uim.dp.attendance.data.api.model.CardRequest
 import sk.stuba.fei.uim.dp.attendance.data.api.model.CardResponse
 import sk.stuba.fei.uim.dp.attendance.data.api.model.ChangePasswordRequest
+import sk.stuba.fei.uim.dp.attendance.data.api.model.GoogleLoginRequest
 import sk.stuba.fei.uim.dp.attendance.data.api.model.NameRequest
 import sk.stuba.fei.uim.dp.attendance.data.api.model.SignupRequest
 import sk.stuba.fei.uim.dp.attendance.data.api.model.UpdateActivityRequest
@@ -80,6 +81,8 @@ interface ApiService {
     suspend fun changePassword(@Path("id")id: Int, @Body request: ChangePasswordRequest): Response<Void>
     @POST("auth/refresh")
     fun refreshTokenBlocking(): Call<AuthResponse>
+    @POST("auth/google")
+    suspend fun googleLogin(@Body request: GoogleLoginRequest): Response<AuthResponse>
     companion object {
         fun create(context: Context): ApiService {
             val client = OkHttpClient.Builder()

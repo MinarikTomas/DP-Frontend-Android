@@ -31,3 +31,6 @@ data class UpdateActivityRequest(
 data class ChangePasswordRequest(
     val newPassword: String
 )
+data class GoogleLoginRequest(
+    val googleToken: String
+)

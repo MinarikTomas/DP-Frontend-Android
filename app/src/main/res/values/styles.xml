@@ -51,4 +51,10 @@
         <item name="android:paddingTop">6dp</item>
         <item name="android:paddingBottom">6dp</item>
     </style>
+    <style name="circular">
+        <item name="cornerSize">50%</item>
+    </style>
+    <style name="google_button">
+        <item name="android:background">@color/white</item>
+    </style>
 </resources>
