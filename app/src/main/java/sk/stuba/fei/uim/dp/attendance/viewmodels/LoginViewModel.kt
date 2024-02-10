@@ -1,5 +1,6 @@
 package sk.stuba.fei.uim.dp.attendance.viewmodels
 
+import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -19,20 +20,22 @@ class LoginViewModel(private val dataRepository: DataRepository): ViewModel() {
     val email = MutableLiveData<String>()
     val password = MutableLiveData<String>()
 
-    fun loginUser() {
+    fun loginUser(context: Context) {
         viewModelScope.launch {
             val result = dataRepository.apiLoginUser(
                 email.value ?: "",
-                password.value ?: ""
+                password.value ?: "",
+                context
+
             )
             _loginResult.postValue(Event(result.first))
             _userResult.postValue(Event(result.second))
         }
     }
 
-    fun googleLogin(token: String){
+    fun googleLogin(token: String, context: Context){
         viewModelScope.launch {
-            val result = dataRepository.apiGoogleLogin(token)
+            val result = dataRepository.apiGoogleLogin(token, context)
             _loginResult.postValue(Event(result.first))
             _userResult.postValue(Event(result.second))
         }

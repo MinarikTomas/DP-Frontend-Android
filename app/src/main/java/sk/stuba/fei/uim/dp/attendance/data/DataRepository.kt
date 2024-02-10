@@ -39,19 +39,20 @@ class DataRepository private constructor(
 
     suspend fun apiLoginUser(
         email: String,
-        password: String
+        password: String,
+        context: Context
     ): Pair<String, User?>{
         try{
             val response = service.loginUser(LoginRequest(email, password))
             if(response.isSuccessful){
                 response.body()?.let {
                     val jwt = JWT(it.accessToken)
+                    PreferenceData.getInstance().putAccess(context, it.accessToken)
+                    PreferenceData.getInstance().putRefresh(context, it.refreshToken)
                     return Pair("", User(
                         jwt.getClaim("fullName").asString() ?: "",
                         jwt.subject ?: "",
                         jwt.getClaim("id").asInt() ?: -1,
-                        it.accessToken,
-                        it.refreshToken
                         )
                     )
                 }
@@ -164,7 +165,7 @@ class DataRepository private constructor(
                         it.time.split(" ")[0],
                         it.time.split(" ")[1],
                         it.createdBy,
-                        it.participants.map {user-> User(user?.fullName ?: "", "", -1, "", "") },
+                        it.participants.map {user-> User(user?.fullName ?: "", "", -1,) },
                         it.startTime,
                         it.endTime
                         )
@@ -222,9 +223,7 @@ class DataRepository private constructor(
                     return Pair("", User(
                         it.fullName,
                         it.email,
-                        it.id,
-                        "",
-                        ""
+                        it.id
                     ))
                 }
             }
@@ -415,18 +414,18 @@ class DataRepository private constructor(
         return "Fatal error. Failed to change password"
     }
 
-    suspend fun apiGoogleLogin(token: String): Pair<String, User?>{
+    suspend fun apiGoogleLogin(token: String, context: Context): Pair<String, User?>{
         try {
             val response = service.googleLogin(GoogleLoginRequest(token))
             if (response.isSuccessful){
                 response.body()?.let {
                     val jwt = JWT(it.accessToken)
+                    PreferenceData.getInstance().putAccess(context, it.accessToken)
+                    PreferenceData.getInstance().putRefresh(context, it.refreshToken)
                     val user = User(
                         jwt.getClaim("fullName").asString() ?: "",
                         jwt.subject ?: "",
                         jwt.getClaim("id").asInt() ?: -1,
-                        it.accessToken,
-                        it.refreshToken,
                         jwt.getClaim("hasCard").asBoolean()
                     )
                     return Pair("", user)

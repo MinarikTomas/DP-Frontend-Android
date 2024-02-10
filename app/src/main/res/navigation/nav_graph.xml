@@ -31,6 +31,10 @@
             android:id="@+id/action_login_home"
             app:destination="@+id/fragment_home"/>
 
+        <action
+            android:id="@+id/action_login_add_card"
+            app:destination="@+id/fragment_add_card"/>
+
     </fragment>
 
     <fragment
@@ -111,9 +115,16 @@
         android:name="sk.stuba.fei.uim.dp.attendance.fragments.AddCardFragment"
         android:label="AddCardFragment">
 
+        <argument
+            android:name="user"
+            app:argType="sk.stuba.fei.uim.dp.attendance.data.model.User"
+            app:nullable="true"
+            android:defaultValue="@null"
+            />
         <action
             android:id="@+id/action_add_card_profile"
             app:destination="@+id/fragment_profile"/>
+
     </fragment>
 
     <fragment

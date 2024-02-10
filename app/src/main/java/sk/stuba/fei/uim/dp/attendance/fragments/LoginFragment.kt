@@ -65,7 +65,7 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
             bnd.btnLogin.apply { 
                 setOnClickListener {
                     if(areAllFieldsFilled()){
-                        viewModel.loginUser()
+                        viewModel.loginUser(requireContext())
                     }
                 }
             }
@@ -84,8 +84,12 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
 
             viewModel.userResult.observe(viewLifecycleOwner){
                 it.getContentIfNotHandled()?.let {user ->
-                    PreferenceData.getInstance().putUser(requireContext(), user)
-                    requireView().findNavController().navigate(R.id.action_login_home)
+                    if (user.hasCard == true){
+                        PreferenceData.getInstance().putUser(requireContext(), user)
+                        requireView().findNavController().navigate(R.id.action_login_home)
+                    }else{
+                        requireView().findNavController().navigate(LoginFragmentDirections.actionLoginAddCard(user))
+                    }
                 }
             }
 
@@ -133,7 +137,7 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                         val googleIdTokenCredential = GoogleIdTokenCredential
                             .createFrom(credential.data)
                         Log.d(TAG, googleIdTokenCredential.idToken)
-                        viewModel.googleLogin(googleIdTokenCredential.idToken)
+                        viewModel.googleLogin(googleIdTokenCredential.idToken, requireContext())
                     } catch (e: GoogleIdTokenParsingException) {
                         Log.e(TAG, "Received an invalid google id token response", e)
                     }

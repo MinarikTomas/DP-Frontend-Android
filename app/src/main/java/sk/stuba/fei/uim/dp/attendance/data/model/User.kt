@@ -10,8 +10,6 @@ data class User(
     val name: String,
     val email: String,
     val id: Int,
-    val access: String,
-    val refresh: String,
     val hasCard: Boolean? = true
 ) : Parcelable{
 

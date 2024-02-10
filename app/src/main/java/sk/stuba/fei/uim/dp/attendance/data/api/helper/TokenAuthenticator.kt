@@ -29,12 +29,12 @@ class TokenAuthenticator(val context: Context): Authenticator {
                                 user.name,
                                 user.email,
                                 user.id,
-                                it.accessToken,
-                                it.refreshToken
                             )
                             PreferenceData.getInstance().putUser(context, new_user)
+                            PreferenceData.getInstance().putAccess(context, it.accessToken)
+                            PreferenceData.getInstance().putRefresh(context, it.refreshToken)
                             return response.request().newBuilder()
-                                .header("Authorization", "Bearer ${new_user.access}")
+                                .header("Authorization", "Bearer ${it.accessToken}")
                                 .build()
                         }
                     }

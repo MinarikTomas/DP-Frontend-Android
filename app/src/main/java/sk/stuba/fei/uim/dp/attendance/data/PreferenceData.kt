@@ -35,6 +35,29 @@ class PreferenceData private constructor() {
 
         return User.fromJson(json)
     }
+    fun putAccess(context: Context?, access: String) {
+        val sharedPref = getSharedPreferences(context) ?: return
+        val editor = sharedPref.edit()
+        editor.putString(accessKey, access)
+        editor.apply()
+    }
+
+    fun getAccess(context: Context?): String? {
+        val sharedPref = getSharedPreferences(context) ?: return ""
+        return sharedPref.getString(accessKey, "")
+    }
+
+    fun putRefresh(context: Context?, refresh: String) {
+        val sharedPref = getSharedPreferences(context) ?: return
+        val editor = sharedPref.edit()
+        editor.putString(refreshKey, refresh)
+        editor.apply()
+    }
+
+    fun getRefresh(context: Context?): String? {
+        val sharedPref = getSharedPreferences(context) ?: return ""
+        return sharedPref.getString(refreshKey, "")
+    }
 
     fun putIsActivityRunning(context: Context?, isRunning: Boolean) {
         val sharedPref = getSharedPreferences(context) ?: return
@@ -78,6 +101,8 @@ class PreferenceData private constructor() {
 
         private const val shpKey = AppConfig.SHARED_PREFERENCES_KEY
         private const val userKey = "userKey"
+        private const val accessKey = "accessKey"
+        private const val refreshKey = "refreshKey"
         private const val runningKey = "runningKey"
         private const val upcomingKey = "upcomingKey"
     }

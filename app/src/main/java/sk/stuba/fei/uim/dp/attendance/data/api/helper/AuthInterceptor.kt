@@ -20,14 +20,14 @@ class AuthInterceptor(private val context: Context) : Interceptor {
             //here we do not need a authorization token
         } else if (chain.request().url().toString().contains("/auth/refresh", true)) {
             //when refreshing token we need to add refresh token
-            val refreshToken = PreferenceData.getInstance().getUser(context)?.refresh
+            val refreshToken = PreferenceData.getInstance().getRefresh(context)
             request.header(
                 "Authorization",
                 "Bearer $refreshToken"
                 )
         } else {
             //we add auth token
-            val token = PreferenceData.getInstance().getUser(context)?.access
+            val token = PreferenceData.getInstance().getAccess(context)
             request.header(
                 "Authorization",
                 "Bearer $token"
