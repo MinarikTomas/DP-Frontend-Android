@@ -56,6 +56,8 @@ class AddCardFragment : Fragment(R.layout.fragment_add_card) {
                         { tag ->
                             serialNumber = tag.id.toHex()
                             nfcAdapter.disableReaderMode(requireActivity())
+                            bnd.btnScan.visibility = View.INVISIBLE
+                            bnd.done.visibility = View.VISIBLE
                         },
                         NfcAdapter.FLAG_READER_NFC_A or
                                 NfcAdapter.FLAG_READER_NFC_B or
