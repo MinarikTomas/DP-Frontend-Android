@@ -8,6 +8,7 @@ import sk.stuba.fei.uim.dp.attendance.data.api.model.AddActivityRequest
 import sk.stuba.fei.uim.dp.attendance.data.api.model.AddParticipantRequest
 import sk.stuba.fei.uim.dp.attendance.data.api.model.CardRequest
 import sk.stuba.fei.uim.dp.attendance.data.api.model.ChangePasswordRequest
+import sk.stuba.fei.uim.dp.attendance.data.api.model.EmailRequest
 import sk.stuba.fei.uim.dp.attendance.data.api.model.GoogleLoginRequest
 import sk.stuba.fei.uim.dp.attendance.data.api.model.LoginRequest
 import sk.stuba.fei.uim.dp.attendance.data.api.model.NameRequest
@@ -165,7 +166,11 @@ class DataRepository private constructor(
                         it.time.split(" ")[0],
                         it.time.split(" ")[1],
                         it.createdBy,
-                        it.participants.map {user-> User(user?.fullName ?: "", "", -1,) },
+                        it.participants.map {user-> User(
+                            user?.fullName ?: "",
+                            user?.email ?: "",
+                            user?.id ?: -1,
+                            ) }.toMutableList(),
                         it.startTime,
                         it.endTime
                         )
@@ -440,5 +445,21 @@ class DataRepository private constructor(
             ex.printStackTrace()
         }
         return Pair("Fatal error. Failed to login user.", null)
+    }
+
+    suspend fun apiResetPassword(email: String): String{
+        try{
+            val response = service.resetPassword(EmailRequest(email))
+            if (response.isSuccessful){
+                return ""
+            }
+            return "Failed to send email"
+        }catch (ex: IOException) {
+            ex.printStackTrace()
+            return "Check internet connection. Failed to send email"
+        } catch (ex: Exception) {
+            ex.printStackTrace()
+        }
+        return "Fatal error. Failed to send email"
     }
 }

@@ -34,3 +34,6 @@ data class ChangePasswordRequest(
 data class GoogleLoginRequest(
     val googleToken: String
 )
+data class EmailRequest(
+    val email: String
+)

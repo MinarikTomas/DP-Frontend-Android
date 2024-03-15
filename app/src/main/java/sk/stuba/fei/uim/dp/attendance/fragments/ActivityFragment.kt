@@ -2,8 +2,10 @@ package sk.stuba.fei.uim.dp.attendance.fragments
 
 import android.nfc.NfcAdapter
 import android.os.Bundle
+import android.os.Environment
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
@@ -21,6 +23,10 @@ import sk.stuba.fei.uim.dp.attendance.data.model.Activity
 import sk.stuba.fei.uim.dp.attendance.data.model.ParcelableActivity
 import sk.stuba.fei.uim.dp.attendance.databinding.FragmentActivityBinding
 import sk.stuba.fei.uim.dp.attendance.viewmodels.ActivityViewModel
+import java.io.BufferedWriter
+import java.io.File
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 class ActivityFragment : Fragment(R.layout.fragment_activity) {
 
@@ -28,7 +34,7 @@ class ActivityFragment : Fragment(R.layout.fragment_activity) {
     private lateinit var viewModel: ActivityViewModel
 
     private val args: ActivityFragmentArgs by navArgs()
-    private var activity: Activity? = null
+    private var selectedActivity: Activity? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,7 +50,7 @@ class ActivityFragment : Fragment(R.layout.fragment_activity) {
             requireView().findNavController().navigate(R.id.action_to_login)
         }
 
-        val callback = requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
             requireView().findNavController().navigate(R.id.action_activity_home)
         }
 
@@ -74,15 +80,18 @@ class ActivityFragment : Fragment(R.layout.fragment_activity) {
 
             viewModel.activityResult.observe(viewLifecycleOwner){ it ->
                 it.getContentIfNotHandled()?.let {
-                    activity = it
+                    selectedActivity = it
                     Log.d("ActivityFragment", it.name)
-                    // activity is running
                     if(it.startTime != "" && it.endTime == ""){
+                        // activity is running
                         handleNFC()
                         bnd.btnEnd.visibility = View.VISIBLE
-                        // activity has not started yet
                     }else if(it.startTime == ""){
+                        // activity has not started yet
                         bnd.btnStart.visibility = View.VISIBLE
+                    }else{
+                        // activity has ended
+                        bnd.btnExport.visibility = View.VISIBLE
                     }
                     val items = it.participants?.map {
                         ParticipantItem(
@@ -133,7 +142,7 @@ class ActivityFragment : Fragment(R.layout.fragment_activity) {
             }
 
             bnd.edit.setOnClickListener {
-                activity?.let {
+                selectedActivity?.let {
                     requireView().findNavController().navigate(ActivityFragmentDirections.actionActivityToEdit(
                         ParcelableActivity(
                             it.id,
@@ -145,6 +154,34 @@ class ActivityFragment : Fragment(R.layout.fragment_activity) {
                     ))
                 }
             }
+
+        bnd.btnExport.setOnClickListener {
+            val documentsDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)
+            val fileName =
+                selectedActivity!!.name.replace(" ", "_") +
+                        selectedActivity!!.date.replace(".", "") +
+                        selectedActivity!!.time.replace(":", "")
+            try{
+                val file = File(documentsDir, fileName + ".json")
+                file.bufferedWriter().use { out ->
+                    out.write(selectedActivity!!.toJson())
+                    out.close()
+                    Toast.makeText(
+                        requireContext(),
+                        "File saved",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }catch (e: Exception){
+                e.printStackTrace()
+                Toast.makeText(
+                    requireContext(),
+                    "Failed to save file",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+
+        }
 
             viewModel.startActivityResult.observe(viewLifecycleOwner){
                 it.getContentIfNotHandled()?.let {
@@ -193,6 +230,7 @@ class ActivityFragment : Fragment(R.layout.fragment_activity) {
 
             viewModel.participantResult.observe(viewLifecycleOwner){
                 it.getContentIfNotHandled()?.let {
+                    selectedActivity?.participants?.add(it)
                     participantsAdapter.addItem(ParticipantItem(it.name ?: ""))
                 }
             }

@@ -35,6 +35,20 @@
             android:id="@+id/action_login_add_card"
             app:destination="@+id/fragment_add_card"/>
 
+        <action
+            android:id="@+id/action_login_forgotten_password"
+            app:destination="@+id/fragment_forgotten_password"/>
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/fragment_forgotten_password"
+        android:name="sk.stuba.fei.uim.dp.attendance.fragments.ForgottenPasswordFragment"
+        android:label="ForgottenPasswordFragment">
+
+        <action
+            android:id="@+id/action_forgotten_password_login"
+            app:destination="@+id/fragment_login"/>
     </fragment>
 
     <fragment

@@ -70,6 +70,12 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                 }
             }
 
+            bnd.forgotPassword.apply {
+                setOnClickListener {
+                    it.findNavController().navigate(R.id.action_login_forgotten_password)
+                }
+            }
+
             viewModel.loginResult.observe(viewLifecycleOwner){
                 it.getContentIfNotHandled()?.let {
                     if(it.isNotEmpty()){

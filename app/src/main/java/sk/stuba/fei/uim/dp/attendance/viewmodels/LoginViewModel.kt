@@ -17,6 +17,9 @@ class LoginViewModel(private val dataRepository: DataRepository): ViewModel() {
     private val _userResult = MutableLiveData<Event<User?>>()
     val userResult: LiveData<Event<User?>> get() = _userResult
 
+    private val _resetPasswordResult = MutableLiveData<Event<String>>()
+    val resetPasswordResult: LiveData<Event<String>> get() = _resetPasswordResult
+
     val email = MutableLiveData<String>()
     val password = MutableLiveData<String>()
 
@@ -38,6 +41,13 @@ class LoginViewModel(private val dataRepository: DataRepository): ViewModel() {
             val result = dataRepository.apiGoogleLogin(token, context)
             _loginResult.postValue(Event(result.first))
             _userResult.postValue(Event(result.second))
+        }
+    }
+
+    fun resetPassword(){
+        viewModelScope.launch {
+            val result = dataRepository.apiResetPassword(email.value ?: "")
+            _resetPasswordResult.postValue(Event(result))
         }
     }
 }
