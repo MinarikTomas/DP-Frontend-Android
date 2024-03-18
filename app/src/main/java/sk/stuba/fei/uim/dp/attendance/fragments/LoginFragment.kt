@@ -89,6 +89,7 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                 it.getContentIfNotHandled()?.let {user ->
                     if (user.hasCard == true){
                         PreferenceData.getInstance().putUser(requireContext(), user)
+                        viewModel.clear()
                         requireView().findNavController().navigate(R.id.action_login_home)
                     }else{
                         requireView().findNavController().navigate(LoginFragmentDirections.actionLoginAddCard(user))

@@ -50,4 +50,9 @@ class LoginViewModel(private val dataRepository: DataRepository): ViewModel() {
             _resetPasswordResult.postValue(Event(result))
         }
     }
+
+    fun clear(){
+        email.value = ""
+        password.value = ""
+    }
 }
