@@ -23,10 +23,7 @@ import sk.stuba.fei.uim.dp.attendance.data.model.Activity
 import sk.stuba.fei.uim.dp.attendance.data.model.ParcelableActivity
 import sk.stuba.fei.uim.dp.attendance.databinding.FragmentActivityBinding
 import sk.stuba.fei.uim.dp.attendance.viewmodels.ActivityViewModel
-import java.io.BufferedWriter
 import java.io.File
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 
 class ActivityFragment : Fragment(R.layout.fragment_activity) {
 
