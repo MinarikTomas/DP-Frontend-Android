@@ -273,10 +273,7 @@ class ActivityFragment : Fragment(R.layout.fragment_activity) {
                     args.activityId,
                     tag.id.toHex())
             },
-            NfcAdapter.FLAG_READER_NFC_A or
-                    NfcAdapter.FLAG_READER_NFC_B or
-                    NfcAdapter.FLAG_READER_NFC_F or
-                    NfcAdapter.FLAG_READER_NFC_V,
+            NfcAdapter.FLAG_READER_NFC_A,
             null)
     }
 

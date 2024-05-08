@@ -1,21 +1,27 @@
 package sk.stuba.fei.uim.dp.attendance.fragments
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
+import com.google.android.material.datepicker.CalendarConstraints
+import com.google.android.material.datepicker.DateValidatorPointForward
+import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.timepicker.MaterialTimePicker
+import com.google.android.material.timepicker.TimeFormat
 import sk.stuba.fei.uim.dp.attendance.R
 import sk.stuba.fei.uim.dp.attendance.data.DataRepository
 import sk.stuba.fei.uim.dp.attendance.data.PreferenceData
 import sk.stuba.fei.uim.dp.attendance.databinding.FragmentEditActivityBinding
 import sk.stuba.fei.uim.dp.attendance.utils.DisableErrorTextWatcher
-import sk.stuba.fei.uim.dp.attendance.viewmodels.ActivityViewModel
 import sk.stuba.fei.uim.dp.attendance.viewmodels.EditActivityViewModel
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 
 class EditActivityFragment : Fragment(R.layout.fragment_edit_activity) {
     private var binding: FragmentEditActivityBinding ?= null
@@ -46,6 +52,44 @@ class EditActivityFragment : Fragment(R.layout.fragment_edit_activity) {
                 if(areAllFieldFilled()){
                     viewModel.updateActivity(args.activity.id)
                 }
+            }
+            val calendar = Calendar.getInstance()
+            calendar.add(Calendar.DATE, -1)
+            val constraintsBuilder = CalendarConstraints.Builder()
+            val dateValidatorMin = DateValidatorPointForward.from(calendar.timeInMillis)
+            constraintsBuilder.setValidator(dateValidatorMin)
+            val datePicker = MaterialDatePicker
+                .Builder
+                .datePicker()
+                .setCalendarConstraints(constraintsBuilder.build())
+                .setTitleText("Select a date")
+                .build()
+            val timePicker = MaterialTimePicker
+                .Builder()
+                .setTitleText("Select a time")
+                .setTimeFormat(TimeFormat.CLOCK_24H)
+                .build()
+
+            bnd.btnDate.apply {
+                setOnClickListener {
+                    datePicker.show(parentFragmentManager, "DATE_PICKER")
+                }
+            }
+            datePicker.addOnPositiveButtonClickListener {
+                timePicker.show(parentFragmentManager, "TIME_PICKER")
+                val sdf = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
+                viewModel.date.value = sdf.format(it)
+            }
+            timePicker.addOnPositiveButtonClickListener {
+                viewModel.time.value =
+                    when(timePicker.hour.toString().length < 2){
+                        true -> "0" + timePicker.hour
+                        false -> timePicker.hour.toString()
+                    } + ":" +
+                            when(timePicker.minute.toString().length < 2){
+                                true -> "0" + timePicker.minute
+                                false -> timePicker.minute
+                            }
             }
 
             viewModel.editActivityResult.observe(viewLifecycleOwner){

@@ -16,6 +16,7 @@ class AuthInterceptor(private val context: Context) : Interceptor {
 
         if (chain.request().url().toString().contains("/auth/signup", true)
             || chain.request().url().toString().contains("/auth/login", true)
+            || chain.request().url().toString().contains("/auth/google", true)
         ) {
             //here we do not need a authorization token
         } else if (chain.request().url().toString().contains("/auth/refresh", true)) {

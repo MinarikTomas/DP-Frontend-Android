@@ -11,7 +11,7 @@
         <item name="android:background">@color/white</item>
     </style>
     <style name="login_connect_with_style">
-        <item name="android:background">@color/white</item>
+        <item name="android:background">?android:colorBackground</item>
     </style>
     <style name="card_item_style">
         <item name="android:elevation">10dp</item>
